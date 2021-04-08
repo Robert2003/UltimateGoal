@@ -100,14 +100,15 @@ public class MecanumTeleOP extends OpMode
 
     }
 
-    public double speed(double X, double Y)
+    double speed(double X, double Y)
     {
-        double flyWheelRadius=0.5;
+        double flyWheelRadius=0.05;
         double alfa = 37.0;
-        double deltaY = Y-0.15;
-        double numarator = 4.9*X*X;
-        double numitor = (tan(toRadians(alfa))*X-deltaY)*cos(toRadians(alfa))*cos(toRadians(alfa));
-        double cat = numitor/numarator;
-        return sqrt(cat)/flyWheelRadius;
+        double deltaY = Y;
+        double h = 0.15;
+        double numarator = -4.9*X*X;
+        double numitor = (Y-h-tan(toRadians(alfa))*X)*cos(toRadians(alfa))*cos(toRadians(alfa));
+        double cat = numarator/numitor;
+        return 2*sqrt(cat)/flyWheelRadius*60/(2*Math.PI);
     }
 }
