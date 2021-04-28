@@ -96,24 +96,18 @@ public class AugmentedDriving extends LinearOpMode {
             // Read pose
             Pose2d poseEstimate = drive.getPoseEstimate();
 
-
-            double deltaY = Math.abs(-126-poseEstimate.getX())*2.54;
-            double deltaX = Math.abs(14.56-poseEstimate.getY())*2.54;
-            double hp = sqrt(deltaX*deltaX+deltaY*deltaY)/100;
-            double sp = speed(poseEstimate.getX(), poseEstimate.getY());
             // Print pose to telemetry
             telemetry.addData("mode", currentMode);
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.addData("theta", Math.toDegrees(theta));
-            telemetry.addData("speed", sp);
-            telemetry.addData("hypot", hp);
             telemetry.update();
 
             // We follow different logic based on whether we are in manual driver control or switch
             // control to the automatic mode
-            switch (currentMode) {
+            switch (currentMode)
+            {
                 case DRIVER_CONTROL:
                     if(gamepad1.right_bumper)
                         drive.setWeightedDrivePower(
@@ -147,38 +141,14 @@ public class AugmentedDriving extends LinearOpMode {
                     robot.Gamepad1Actions(gamepad1);
                     robot.Gamepad2Actions(gamepad2, poseEstimate.getX(), poseEstimate.getY());
 
-                    /*if (gamepad1.a) {
-                        // If the A button is pressed on gamepad1, we generate a splineTo()
-                        // trajectory on the fly and follow it
-                        // We switch the state to AUTOMATIC_CONTROL
-
-                        Trajectory traj1 = drive.trajectoryBuilder(poseEstimate, true)
-                                .splineTo(targetAVector, targetAHeading)
-                                .build();
-
-                        drive.followTrajectoryAsync(traj1);
-
-                        currentMode = Mode.AUTOMATIC_CONTROL;
-                    } else if (gamepad1.b) {
-                        // If the B button is pressed on gamepad1, we generate a lineTo()
-                        // trajectory on the fly and follow it
-                        // We switch the state to AUTOMATIC_CONTROL
-
-                        Trajectory traj1 = drive.trajectoryBuilder(poseEstimate, true)
-                                .lineTo(targetBVector)
-                                .build();
-
-                        drive.followTrajectoryAsync(traj1);
-
-                        currentMode = Mode.AUTOMATIC_CONTROL;
-                    } else*/
                     if (gamepad1.y) {
-                        // If Y is pressed, we turn the bot to the specified angle to reach
-                        // targetAngle (by default, 45 degrees)
+                        // Daca apas Y, robotul se intoarce catre poarta
 
+                        //Diferenta dintre coordonatele vectorilor
                         Vector2d difference = targetPosition.minus(poseEstimate.vec());
-                        // Obtain the target angle for feedback and derivative for feedforward
-                        theta = difference.angle()+Math.PI;
+
+                        //Unghiul bun sa se intoarca
+                        theta = difference.angle() + Math.PI; // +Math.PI ca sa nu stea cu spatele la poarta
 
                         drive.turnAsync(Angle.normDelta(theta - poseEstimate.getHeading()));
 
