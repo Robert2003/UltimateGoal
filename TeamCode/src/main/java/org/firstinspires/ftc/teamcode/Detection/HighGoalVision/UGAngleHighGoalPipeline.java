@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Detection.HighGoalVision;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
@@ -74,6 +78,7 @@ public class UGAngleHighGoalPipeline extends UGBasicHighGoalPipeline {
         verticalFocalLength = this.imageHeight / (2 * Math.tan(verticalView / 2));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public Mat processFrame(Mat input) {
         input = super.processFrame(input);
