@@ -53,7 +53,7 @@ public class AugmentedDriving extends LinearOpMode {
 
     Mode currentMode = Mode.DRIVER_CONTROL;
 
-    RobotConstants robot = new RobotConstants();
+    RobotConstants_Augmented robot = new RobotConstants_Augmented();
     Vector2d targetPosition = new Vector2d(-131, 13);
     double theta=0.0;
     private ElapsedTime runtime = new ElapsedTime();
