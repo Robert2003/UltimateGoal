@@ -112,9 +112,9 @@ public class AugmentedDriving extends LinearOpMode {
                     if(gamepad1.right_bumper)
                         drive.setWeightedDrivePower(
                             new Pose2d(
-                                    -gamepad1.right_stick_y*0.35,
-                                    -gamepad1.right_stick_x*0.35,
-                                    (-gamepad1.right_trigger + gamepad1.left_trigger)*0.35
+                                    -gamepad1.right_stick_y*0.3,
+                                    -gamepad1.right_stick_x*0.3,
+                                    (-gamepad1.right_trigger + gamepad1.left_trigger)*0.3
                             )
                         );
                     else

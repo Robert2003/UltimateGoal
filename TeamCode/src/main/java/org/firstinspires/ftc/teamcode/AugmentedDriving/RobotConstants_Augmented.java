@@ -154,7 +154,7 @@ public class RobotConstants_Augmented
 
         /**FlyWheel*/
         if(gamepad2.right_bumper && !gamepad2.dpad_up)
-            flyWheel.setVelocity(rpmToTicksPerSecond(speed(x, y)));
+            flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else if(gamepad2.right_bumper)
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else
