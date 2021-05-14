@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AugmentedDriving;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 
+import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
@@ -98,10 +100,12 @@ public class AugmentedDriving extends LinearOpMode {
 
             // Print pose to telemetry
             telemetry.addData("mode", currentMode);
+            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("theta", theta);
+            telemetry.addData("theta2", Math.toDegrees(theta - poseEstimate.getHeading()));
+            telemetry.addData("theta3", poseEstimate.getHeading());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("theta", Math.toDegrees(theta));
             telemetry.update();
 
             // We follow different logic based on whether we are in manual driver control or switch
@@ -112,17 +116,17 @@ public class AugmentedDriving extends LinearOpMode {
                     if(gamepad1.right_bumper)
                         drive.setWeightedDrivePower(
                             new Pose2d(
-                                    -gamepad1.right_stick_y*0.3,
-                                    -gamepad1.right_stick_x*0.3,
-                                    (-gamepad1.right_trigger + gamepad1.left_trigger)*0.3
+                                    gamepad1.right_stick_y*0.3,
+                                    gamepad1.right_stick_x*0.3,
+                                    -(gamepad1.right_trigger - gamepad1.left_trigger)*0.3
                             )
                         );
                     else
                         drive.setWeightedDrivePower(
                                 new Pose2d(
-                                        -gamepad1.right_stick_y,
-                                        -gamepad1.right_stick_x,
-                                        (-gamepad1.right_trigger + gamepad1.left_trigger)
+                                        gamepad1.right_stick_y,
+                                        gamepad1.right_stick_x,
+                                        -(gamepad1.right_trigger - gamepad1.left_trigger)
                                 )
                         );
 
@@ -142,13 +146,9 @@ public class AugmentedDriving extends LinearOpMode {
                     robot.Gamepad2Actions(gamepad2, poseEstimate.getX(), poseEstimate.getY());
 
                     if (gamepad1.y) {
-                        // Daca apas Y, robotul se intoarce catre poarta
-
-                        //Diferenta dintre coordonatele vectorilor
                         Vector2d difference = targetPosition.minus(poseEstimate.vec());
-
-                        //Unghiul bun sa se intoarca
-                        theta = difference.angle() + Math.PI; // +Math.PI ca sa nu stea cu spatele la poarta
+                        // Obtain the target angle for feedback and derivative for feedforward
+                        theta = difference.angle();
 
                         drive.turnAsync(Angle.normDelta(theta - poseEstimate.getHeading()));
 

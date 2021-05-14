@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer_Cancelable;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
@@ -142,10 +142,10 @@ public class SampleMecanumDriveCancelable extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront  = hardwareMap.get(DcMotorEx.class, "fl_motor");
-        leftRear   = hardwareMap.get(DcMotorEx.class, "bl_motor");
-        rightRear  = hardwareMap.get(DcMotorEx.class, "br_motor");
-        rightFront = hardwareMap.get(DcMotorEx.class, "fr_motor");
+        leftFront  = hardwareMap.get(DcMotorEx.class, "br_motor");
+        leftRear   = hardwareMap.get(DcMotorEx.class, "fr_motor");
+        rightRear  = hardwareMap.get(DcMotorEx.class, "fl_motor");
+        rightFront = hardwareMap.get(DcMotorEx.class, "bl_motor");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -170,7 +170,7 @@ public class SampleMecanumDriveCancelable extends MecanumDrive {
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer_Cancelable(hardwareMap, this));
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {

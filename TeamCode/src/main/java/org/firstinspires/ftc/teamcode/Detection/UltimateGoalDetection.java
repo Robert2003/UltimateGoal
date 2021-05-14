@@ -23,10 +23,14 @@ package org.firstinspires.ftc.teamcode.Detection;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -96,20 +100,25 @@ public class UltimateGoalDetection extends LinearOpMode
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.position);
+        telemetry.update();
+
         waitForStart();
         runtime.reset();
 
-        SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
-
         while (opModeIsActive() && !finishedAuto)
         {
-           while(runtime.milliseconds()<100);
+            while(runtime.milliseconds()<100);
+           // sleep(600);
 
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.addData("Position", pipeline.position);
             telemetry.update();
 
-            /*switch(lastPosition)
+            SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
+
+            lastPosition = SkystoneDeterminationPipeline.RingPosition.NONE;
+
+            switch(lastPosition)
             {
                 case NONE:
                     robot.wobbleArm.setTargetPosition(robot.wobbleArm.getCurrentPosition());
@@ -119,13 +128,13 @@ public class UltimateGoalDetection extends LinearOpMode
                     robot.flyWheel.setVelocity(rpmToTicksPerSecond(3600));
 
                     traj1 = drive.trajectoryBuilder(new Pose2d(), true)
-                            .lineTo(new Vector2d(-62, 16.54))
+                            .lineTo(new Vector2d(60, -21))
                             .build(); //Shooting point
                     traj2 = drive.trajectoryBuilder(traj1.end(), true)
-                            .lineToLinearHeading(new Pose2d(-65, 20, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(65, -6, Math.toRadians(-60.16973581)))
                             .build(); //Leave first wobble
                     traj3 = drive.trajectoryBuilder(traj2.end(), true)
-                            .lineToLinearHeading(new Pose2d(-37, 23, Math.toRadians(-180)))
+                            .lineToLinearHeading(new Pose2d(37, -6, Math.toRadians(-180)))
                             .build(); //Approach second wobble
                     traj4 = drive.trajectoryBuilder(traj3.end(), true)
                             .back(10)
@@ -420,7 +429,7 @@ public class UltimateGoalDetection extends LinearOpMode
 
                     finishedAuto = true;
                     break;
-            }*/
+            }
         }
     }
 
