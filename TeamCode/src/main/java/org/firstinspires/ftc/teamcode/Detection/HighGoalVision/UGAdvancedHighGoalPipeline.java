@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Detection.HighGoalVision;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import org.opencv.core.Mat;
 
 public class UGAdvancedHighGoalPipeline extends UGAngleHighGoalPipeline {
@@ -29,6 +33,7 @@ public class UGAdvancedHighGoalPipeline extends UGAngleHighGoalPipeline {
         this.cameraYawOffset = cameraYawOffset;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public Mat processFrame(Mat input) {
         super.processFrame(input);
