@@ -128,7 +128,7 @@ public class UltimateGoalDetection extends LinearOpMode
                     robot.flyWheel.setVelocity(rpmToTicksPerSecond(3600));
 
                     traj1 = drive.trajectoryBuilder(new Pose2d(), true)
-                            .lineTo(new Vector2d(60, -21))
+                            .lineTo(new Vector2d(64, -18))
                             .build(); //Shooting point
                     traj2 = drive.trajectoryBuilder(traj1.end(), true)
                             .lineToLinearHeading(new Pose2d(65, -6, Math.toRadians(-60.16973581)))
