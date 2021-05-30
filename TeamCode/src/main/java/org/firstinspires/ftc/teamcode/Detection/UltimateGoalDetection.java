@@ -76,7 +76,7 @@ public class UltimateGoalDetection extends LinearOpMode
         }
         
         robot.init(hardwareMap);
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
         robot.wobbleServo.setPosition(1);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

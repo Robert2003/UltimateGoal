@@ -101,9 +101,7 @@ public class AugmentedDriving extends LinearOpMode {
             // Print pose to telemetry
             telemetry.addData("mode", currentMode);
             telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("theta", theta);
-            telemetry.addData("theta2", Math.toDegrees(theta - poseEstimate.getHeading()));
-            telemetry.addData("theta3", poseEstimate.getHeading());
+            telemetry.addData("arm", robot.wobbleArm.getCurrentPosition());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.update();

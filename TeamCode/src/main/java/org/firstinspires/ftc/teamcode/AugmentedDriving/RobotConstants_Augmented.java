@@ -84,7 +84,7 @@ public class RobotConstants_Augmented
         {
             trigger = true;
             wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            wobbleArm.setPower(0.3);
+            wobbleArm.setPower(-0.5);
         }
         else if(trigger)
         {
@@ -99,14 +99,14 @@ public class RobotConstants_Augmented
             if(gamepad2.left_stick_button)
             {
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                wobbleArm.setTargetPosition(-640);
-                wobbleArm.setPower(0.3);
+                wobbleArm.setTargetPosition(799);
+                wobbleArm.setPower(0.5);
             }
             else if(gamepad2.right_stick_button)
             {
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                wobbleArm.setTargetPosition(-300);
-                wobbleArm.setPower(0.6);
+                wobbleArm.setTargetPosition(480);
+                wobbleArm.setPower(0.7);
             }
             else if(Math.abs(wobbleArm.getTargetPosition()-wobbleArm.getCurrentPosition()) < 15)
             {

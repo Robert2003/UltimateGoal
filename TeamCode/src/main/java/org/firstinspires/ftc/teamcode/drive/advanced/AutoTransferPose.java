@@ -35,7 +35,7 @@ public class AutoTransferPose extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare your drive class
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
 
         // Set the pose estimate to where you know the bot will start in autonomous
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map

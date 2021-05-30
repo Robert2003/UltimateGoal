@@ -57,7 +57,7 @@ public class AsyncFollowingFSM extends LinearOpMode {
         Lift lift = new Lift(hardwareMap);
 
         // Initialize SampleMecanumDrive
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
 
         // Set inital pose
         drive.setPoseEstimate(startPose);

@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import static java.lang.Thread.sleep;
+
 public class RobotDefinition
 {
     public DcMotor leftFront = null, leftRear = null, rightFront = null, rightRear = null;
@@ -73,6 +75,7 @@ public class RobotDefinition
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
         servo.setPosition(0.55);
         intakeServo.setPosition(0.9);
+        wobbleServo.setPosition(1);
 
         MotorConfigurationType motorConfigurationType = flyWheel.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
@@ -215,6 +218,53 @@ public class RobotDefinition
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else
             flyWheel.setVelocity(0);
+    }
+
+    public void toggleFlyWheel()
+    {
+        if(flyWheel.getVelocity()==0)
+            flyWheel.setVelocity(rpmToTicksPerSecond(TOWER_RPM));
+        else
+            flyWheel.setVelocity(0);
+    }
+
+    public void shoot3rings() throws InterruptedException {
+        for(int i = 1; i <= 3; i++) {
+            servo.setPosition(0);
+            sleep(400);
+            servo.setPosition(0.55);
+            sleep(400);
+        }
+    }
+
+    public void dropArm()
+    {
+        wobbleArm.setTargetPosition(670);
+        wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wobbleArm.setPower(0.5);
+        while(wobbleArm.isBusy());
+    }
+
+    public void dropArm(boolean forSecondWobble)
+    {
+        wobbleArm.setTargetPosition(780);
+        wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wobbleArm.setPower(0.5);
+        while(wobbleArm.isBusy());
+    }
+
+    public void dropWobble() throws InterruptedException {
+        wobbleServo.setPosition(0.5);
+        sleep(200);
+    }
+
+    public void grabWobble() throws InterruptedException {
+        wobbleServo.setPosition(1);
+        sleep(200);
+        wobbleArm.setTargetPosition(670);
+        wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wobbleArm.setPower(0.5);
+        while(wobbleArm.isBusy());
     }
 
     public static double rpmToTicksPerSecond(double rpm) {
