@@ -32,9 +32,13 @@ public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
-        sleep(2000);
-        stack = pipeline.stack;
-        telemetry.addData("stack",stack);
-        telemetry.update();
+        waitForStart();
+
+        while (opModeIsActive())
+        {
+            stack = pipeline.stack;
+            telemetry.addData("stack", stack);
+            telemetry.update();
+        }
     }
 }
