@@ -35,8 +35,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.TeleOP.RobotDefinition;
+import org.firstinspires.ftc.teamcode.EverythingForAutonomous.RobotDefinition_ForAuto;
+import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -51,9 +51,10 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Config
 @Autonomous
+@Disabled
 public class UltimateGoalDetection extends LinearOpMode
 {
-    public RobotDefinition robot = new RobotDefinition();
+    public RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
     boolean finishedAuto = false;
 
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.78);

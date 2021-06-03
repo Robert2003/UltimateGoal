@@ -1,28 +1,22 @@
 package org.firstinspires.ftc.teamcode.Detection.BetterRingDetection;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @TeleOp (name = "RingDetector", group = "Detect")
+@Disabled
 public class RingDetector  extends LinearOpMode
 {
-    OpenCvCamera phoneCam;
-    private String webcamName = "Webcam";
-    public static int CAMERA_WIDTH = 320, CAMERA_HEIGHT = 240;
-    public static OpenCvCameraRotation ORIENTATION = OpenCvCameraRotation.UPRIGHT;
-
+    OpenCvWebcam webCam;
+    String WEBCAM_NAME = "Webcam";
     public RingPipeline visionPipeline = new RingPipeline();
 
     @Override
@@ -30,19 +24,25 @@ public class RingDetector  extends LinearOpMode
     {
         // Camera Init
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        webCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
+        visionPipeline = new RingPipeline();
+        webCam.setPipeline(visionPipeline);
+
+        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
+        // out when the RC activity is in portrait. We do our actual image processing assuming
+        // landscape orientation, though.
+        webCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
+        webCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
             @Override
-            public void onOpened() {
-                phoneCam.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, ORIENTATION);
+            public void onOpened()
+            {
+                webCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
         });
 
-        // Loading pipeline
-        phoneCam.setPipeline(visionPipeline);
-
-        // Start streaming the pipeline
-        phoneCam.startStreaming(320,240,OpenCvCameraRotation.UPRIGHT);
+        FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
         waitForStart();
 
