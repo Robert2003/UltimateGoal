@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous(name="Case0", group="Cases")
+@Disabled
 public class Case0 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -58,6 +60,7 @@ public class Case0 extends LinearOpMode {
         robot.toggleFlyWheel(false);
         drive.followTrajectory(firstWobble);
         robot.dropArm(670);
+        sleep(1000);
         robot.dropWobble();
         drive.followTrajectory(back);
         robot.dropArm(780);

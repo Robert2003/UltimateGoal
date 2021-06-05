@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.DetectieFurataDePeNet;
+package org.firstinspires.ftc.teamcode.EverythingForAutonomous;
+
+import com.acmerobotics.dashboard.config.Config;
 
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.opencv.core.Core;
@@ -8,13 +10,14 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+@Config
 public class UltimateGoalReturnPositionPipeline extends OpenCvPipeline {
-    public int BOTTOMLEFTX = 550;
-    public int BOTTOMLEFTY = 254;//bot left coordinates of small 1 ring box
-    public int WIDTH = 68;//width of 1 ring box
-    public int HEIGHT1 = 31;//height of 1 ring
+    public static int BOTTOMLEFTX = 505;
+    public static int BOTTOMLEFTY = 240;//bot left coordinates of small 1 ring box
+    public static int WIDTH = 90;//width of 1 ring box
+    public static int HEIGHT1 = 43;//height of 1 ring
     public int BUFFER = 12;
-    public int HEIGHT2 = 48;//height of 4 rings
+    public static int HEIGHT2 = 65;//height of 4 rings
     public double HThresholdLow = 5;
     public double HThresholdHigh = 18;
     public int stack;
@@ -31,7 +34,7 @@ public class UltimateGoalReturnPositionPipeline extends OpenCvPipeline {
         Imgproc.putText(input,"TopBoxH: "+topBox[0],new Point(0,100),1,1,new Scalar(0,0,0));
         Imgproc.putText(input,"BottomBoxH: "+bottomBox[0],new Point(0,200),1,1,new Scalar(0,0,0));
         if(isAboveThresholds(topBox[0])){
-            stack = 2;
+            stack = 4;
         }
         else if(isAboveThresholds(bottomBox[0])){
             stack = 1;

@@ -107,7 +107,7 @@ public class RobotDefinition_ForAuto
         if(shouldTurnOn==true)
             flyWheel.setVelocity(rpmToTicksPerSecond(TOWER_RPM));
         else
-            flyWheel.setVelocity(0);
+            flyWheel.setVelocity(rpmToTicksPerSecond(10));
     }
 
     public void toggleFlyWheel(boolean shouldTurnOn, int RPM)
@@ -115,7 +115,7 @@ public class RobotDefinition_ForAuto
         if(shouldTurnOn==true)
             flyWheel.setVelocity(rpmToTicksPerSecond(RPM));
         else
-            flyWheel.setVelocity(0);
+            flyWheel.setVelocity(rpmToTicksPerSecond(10));
     }
 
     public void toggleIntake()

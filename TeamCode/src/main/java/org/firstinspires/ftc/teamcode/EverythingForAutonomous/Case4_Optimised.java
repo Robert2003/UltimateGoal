@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous(name="Case4_Optimised", group="Cases")
+@Disabled
 public class Case4_Optimised extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -78,7 +80,7 @@ public class Case4_Optimised extends LinearOpMode {
                     robot.dropArm(650);
                 })
                 .build();
-        Trajectory park = drive.trajectoryBuilder(firstWobble.end())
+        Trajectory park = drive.trajectoryBuilder(dropSecondWobble.end())
                 .lineTo(new Vector2d(80, -29))
                 .addTemporalMarker(0.1, () -> {
                     robot.wobbleServo.setPosition(0.45);
