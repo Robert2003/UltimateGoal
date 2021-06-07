@@ -24,7 +24,7 @@ public class RobotDefinition_ForTeleOP
     public static double MOTOR_GEAR_RATIO = 1;
 
     public static int GOAL_RPM = 3200;
-    public static int POWERSHOTS_RPM = 2850;
+    public static int POWERSHOTS_RPM = 2840;
 
     boolean  trigger = false;
 
@@ -135,7 +135,7 @@ public class RobotDefinition_ForTeleOP
         else if(gamepad2.right_bumper)
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else
-            flyWheel.setVelocity(0);
+            flyWheel.setVelocity(10);
     }
 
     public static double rpmToTicksPerSecond(double rpm) {

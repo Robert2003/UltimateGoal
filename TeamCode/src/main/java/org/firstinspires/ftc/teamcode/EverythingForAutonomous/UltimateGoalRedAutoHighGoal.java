@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
@@ -15,6 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "RedAutoHighGoal", group = "Autonomous")
+@Disabled
 public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
 
     int stack = 2;
@@ -85,7 +88,7 @@ public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
                     .splineTo(new Vector2d(55, -18), 0.01)
                     .build();
             Trajectory grabSecondWobble_1 = drive.trajectoryBuilder(shootingPosition2_1.end(), true)
-                    .lineToLinearHeading(new Pose2d(40, -20, 3.14))
+                    .lineToLinearHeading(new Pose2d(40, -21, 3.14))
                     .build();
             Trajectory forward_1 = drive.trajectoryBuilder(grabSecondWobble_1.end(), true)
                     .forward(12)
@@ -166,6 +169,8 @@ public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
         {
             stack = pipeline.stack;
             telemetry.addData("stack", stack);
+            telemetry.addData("treshold1", pipeline.getTreshold1());
+            telemetry.addData("treshold2", pipeline.getTreshold2());
             telemetry.update();
             switch (stack) {
                 case 0:
@@ -252,6 +257,10 @@ public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
                     finishedAuto = true;
                     break;
             }
+
+
+
+
         }
     }
 }
