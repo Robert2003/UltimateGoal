@@ -24,7 +24,7 @@ public class RobotDefinition_ForTeleOP
     public static double MOTOR_GEAR_RATIO = 1;
 
     public static int GOAL_RPM = 3200;
-    public static int POWERSHOTS_RPM = 2840;
+    public static int POWERSHOTS_RPM = 2800;
 
     boolean  trigger = false;
 

@@ -80,11 +80,20 @@ public class RobotDefinition_ForAuto
         }
     }
 
+    public void shootrings(int timesToShoot, int delay) throws InterruptedException {
+        for(int i = 1; i <= timesToShoot; i++) {
+            servo.setPosition(0);
+            sleep(delay);
+            servo.setPosition(0.55);
+            sleep(delay);
+        }
+    }
+
     public void dropArm(int ticks)
     {
         wobbleArm.setTargetPosition(ticks);
         wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        wobbleArm.setPower(1);
+        wobbleArm.setPower(0.3);
         while(Math.abs(wobbleArm.getTargetPosition()-wobbleArm.getCurrentPosition()) > 10);
     }
 

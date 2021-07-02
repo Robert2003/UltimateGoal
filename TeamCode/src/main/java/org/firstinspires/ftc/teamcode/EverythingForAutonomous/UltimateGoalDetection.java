@@ -58,7 +58,7 @@ public class UltimateGoalDetection extends LinearOpMode
 {
     boolean finishedAuto = false;
 
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.78);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
@@ -113,14 +113,7 @@ public class UltimateGoalDetection extends LinearOpMode
         // landscape orientation, though.
         webCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        webCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                webCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-            }
-        });
+        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT));
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
@@ -185,7 +178,7 @@ public class UltimateGoalDetection extends LinearOpMode
         Trajectory firstWobble_4 = drive.trajectoryBuilder(shootingPosition1_4.end())
                 .splineTo(new Vector2d(108.6, -28.7), 5.43)
                 .addTemporalMarker(0.1, () -> {
-                    robot.dropArm(700);
+                    robot.dropArm(630);
                 })
                 .build();
         Trajectory back_4 = drive.trajectoryBuilder(firstWobble_4.end())
@@ -197,7 +190,7 @@ public class UltimateGoalDetection extends LinearOpMode
                     robot.toggleIntakeServo(true);
                     robot.dropArm(300);
                     robot.toggleIntake();
-                    robot.toggleFlyWheel(true, 2995);
+                    robot.toggleFlyWheel(true, 3000);
                 })
                 .build();
         Trajectory firstRing_4 = drive.trajectoryBuilder(goNextToRings_4.end(), true)
@@ -209,7 +202,7 @@ public class UltimateGoalDetection extends LinearOpMode
         Trajectory thirdRing_4 = drive.trajectoryBuilder(secondRing_4.end(), true)
                 .lineToLinearHeading(new Pose2d(32, -11, 6.25))
                 .addTemporalMarker(0.1, () -> {
-                    robot.toggleFlyWheel(true, 3000);
+                    robot.toggleFlyWheel(true, 3080);
                 })
                 .build();
         Trajectory fourthRing_4 = drive.trajectoryBuilder(thirdRing_4.end(), true)
