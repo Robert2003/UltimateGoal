@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.RobotDefinition_ForAuto;
+import org.firstinspires.ftc.teamcode.EverythingForAutonomous.UltimateGoalDetection;
+import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.AutonomousManagerLinear;
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.UltimateGoalDetectionConditional;
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 
