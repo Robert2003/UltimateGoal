@@ -299,7 +299,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isRed = true;
@@ -319,7 +319,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isFirst = true;
@@ -339,7 +339,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 shouldPark = true;
@@ -359,7 +359,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 collectStack = true;
@@ -382,7 +382,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.dpad_up) {
                 waitingAnswer = false;
                 selectedCase = 0;
@@ -409,10 +409,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.addData("A2", "Line: " + (isFirst ? "FIRST" : "SECOND") + ((selectedAnswer == 2) ? " [X]" : ""));
         telemetry.addData("A3", "Park: " + (shouldPark ? "YES" : "NO") + ((selectedAnswer == 3) ? " [X]" : ""));
         telemetry.addData("A4", "Collect stack: " + (collectStack ? "YES" : "NO") + ((selectedAnswer == 4) ? " [X]" : ""));
-        if (selectedCase == -1) telemetry.addData("A5", "Detection");
-        else if (selectedCase == 0) telemetry.addData("A5", "Case 0");
-        else if (selectedCase == 1) telemetry.addData("A5", "Case 1");
-        else if (selectedCase == 4) telemetry.addData("A5", "Case 4");
+        if (selectedCase == -1) telemetry.addData("A5", "Detection" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 0) telemetry.addData("A5", "Case 0" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 1) telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 4) telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
     }
@@ -422,7 +422,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         waitingAnswer = true;
         pressingSelectionButton = false;
         boolean firstFramePressing = false;
-        while (waitingAnswer) {
+        while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.b || gamepad1.y || gamepad1.dpad_right || gamepad1.dpad_left ||
                     gamepad1.dpad_up || gamepad1.dpad_down) {
                 if(pressingSelectionButton)
@@ -431,6 +431,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                     pressingSelectionButton = true;
                     firstFramePressing = true;
                 }
+                sleep(500);
             } else{
                 pressingSelectionButton = false;
             }
@@ -445,7 +446,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 telemetry.update();
             } else if (gamepad1.dpad_down) {
                 selectedAnswer++;
-                if (selectedAnswer == 1)
+                if (selectedAnswer == 6)
                     selectedAnswer = 1;
                 showcaseAnswers();
             } else if (gamepad1.dpad_up) {
