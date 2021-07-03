@@ -23,8 +23,6 @@ package org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -66,7 +64,9 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
     boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer;
-
+    //delays
+    int collectStackDelay, parkDelay, shootDelay;
+    int selectedAnswer = 1;
 
     OpenCvWebcam webCam;
     SkystoneDeterminationPipeline pipeline;
@@ -125,24 +125,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         robot.init(hardwareMap);
 
         askQuestions();
-        telemetry.addData("A1", "Side: " + (isRed ? "RED" : "BLUE"));
-        telemetry.addData("A2", "Line: " + (isFirst ? "FIRST" : "SECOND"));
-        telemetry.addData("A3", "Park: " + (shouldPark ? "YES" : "NO"));
-        telemetry.addData("A4", "Collect stack: " + (collectStack ? "YES" : "NO")+ "\nPress B to modify your answers.\nPress Y to submit your answers.");
-        telemetry.update();
-        sleep(500);
-        waitingAnswer = true;
-        while(waitingAnswer){
-            if(gamepad1.b){
-                waitingAnswer = false;
-                askQuestions();
-            }
-            else if(gamepad1.y){
-                waitingAnswer = false;
-                telemetry.addData("R", "Ready for start.");
-                telemetry.update();
-            }
-        }
+        showcaseAnswers();
+        confirmAnswers();
 
         ConditionalCase0 conditionalCase0 = new ConditionalCase0(this);
         ConditionalCase1 conditionalCase1 = new ConditionalCase1(this);
@@ -305,7 +289,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && opModeIsActive()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isRed = true;
@@ -325,7 +309,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && opModeIsActive()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isFirst = true;
@@ -345,7 +329,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && opModeIsActive()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 shouldPark = true;
@@ -365,7 +349,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer) {
+        while (waitingAnswer && opModeIsActive()) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 collectStack = true;
@@ -379,6 +363,36 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         while(!gamepad1.y);
+    }
+
+    private void showcaseAnswers(){
+        telemetry.addData("A1", "Side: " + (isRed ? "RED" : "BLUE") + ((selectedAnswer == 1) ? " [X]" : ""));
+        telemetry.addData("A2", "Line: " + (isFirst ? "FIRST" : "SECOND") + ((selectedAnswer == 2) ? " [X]" : ""));
+        telemetry.addData("A3", "Park: " + (shouldPark ? "YES" : "NO") + ((selectedAnswer == 3) ? " [X]" : ""));
+        telemetry.addData("A4", "Collect stack: " + (collectStack ? "YES" : "NO")+ "\nPress B to modify your answers.\nPress Y to submit your answers.");
+        telemetry.update();
+    }
+
+    private void confirmAnswers(){
+        sleep(500);
+        waitingAnswer = true;
+        while(waitingAnswer && opModeIsActive()){
+            if(gamepad1.b){
+                waitingAnswer = false;
+                askQuestions();
+            }
+            else if(gamepad1.y){
+                waitingAnswer = false;
+                telemetry.addData("R", "Ready for start.");
+                telemetry.update();
+            } else if(gamepad1.dpad_down && selectedAnswer < 4){
+                selectedAnswer++;
+                showcaseAnswers();
+            } else if(gamepad1.dpad_up && selectedAnswer > 1){
+                selectedAnswer--;
+                showcaseAnswers();
+            }
+        }
     }
 
 }
