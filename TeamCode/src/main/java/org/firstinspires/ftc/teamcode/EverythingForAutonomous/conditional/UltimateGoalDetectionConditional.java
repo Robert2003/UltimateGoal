@@ -385,7 +385,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 waitingAnswer = false;
                 telemetry.addData("R", "Ready for start.");
                 telemetry.update();
-            } else if(gamepad1.dpad_down && selectedAnswer < 4){
+            } else if(gamepad1.dpad_down && selectedAnswer < 3){
                 selectedAnswer++;
                 showcaseAnswers();
             } else if(gamepad1.dpad_up && selectedAnswer > 1){
