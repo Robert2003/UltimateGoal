@@ -64,7 +64,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
-    boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer;
+    boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
     int selectedCase;
     //delays
     int collectStackDelay, parkDelay, shootDelay;
@@ -420,22 +420,31 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     private void confirmAnswers() {
         sleep(500);
         waitingAnswer = true;
+        pressingSelectionButton = false;
         while (waitingAnswer) {
-            if (gamepad1.b) {
+            if (gamepad1.b && !pressingSelectionButton) {
                 waitingAnswer = false;
                 askQuestions();
-            } else if (gamepad1.y) {
+                pressingSelectionButton = true;
+            } else if (gamepad1.y && !pressingSelectionButton) {
                 waitingAnswer = false;
                 telemetry.addData("R", "Ready for start.");
                 telemetry.update();
-            } else if (gamepad1.dpad_down && selectedAnswer < 4) {
+                pressingSelectionButton = true;
+            } else if (gamepad1.dpad_down && !pressingSelectionButton) {
                 selectedAnswer++;
+                if(selectedAnswer == 1)
+                    selectedAnswer = 1;
                 showcaseAnswers();
-            } else if (gamepad1.dpad_up && selectedAnswer > 1) {
+                pressingSelectionButton = true;
+            } else if (gamepad1.dpad_up && !pressingSelectionButton) {
                 selectedAnswer--;
+                if(selectedAnswer == 0)
+                    selectedAnswer = 5;
                 showcaseAnswers();
-            } else if(gamepad1.dpad_right || gamepad1.dpad_left){
-                switch (selectedAnswer){
+                pressingSelectionButton = true;
+            } else if (selectedAnswer != 5 && (gamepad1.dpad_right || gamepad1.dpad_left) && !pressingSelectionButton) {
+                switch (selectedAnswer) {
                     case 1:
                         isRed = !isRed;
                         break;
@@ -450,9 +459,9 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                         break;
                 }
                 showcaseAnswers();
-            } else if(gamepad1.dpad_right){
-                if(selectedAnswer == 5){
-                    switch (selectedCase){
+                pressingSelectionButton = true;
+            } else if (gamepad1.dpad_right && !pressingSelectionButton) {
+                    switch (selectedCase) {
                         case -1:
                             selectedCase = 0;
                             break;
@@ -466,11 +475,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                             selectedCase = -1;
                             break;
                     }
-                }
                 showcaseAnswers();
-            } else if(gamepad1.dpad_left){
-                if(selectedAnswer == 5){
-                    switch (selectedCase){
+                pressingSelectionButton = true;
+            } else if (gamepad1.dpad_left && !pressingSelectionButton) {
+                    switch (selectedCase) {
                         case -1:
                             selectedCase = 4;
                             break;
@@ -483,9 +491,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                         case 0:
                             selectedCase = -1;
                             break;
-                    }
                 }
                 showcaseAnswers();
+                pressingSelectionButton = true;
+            } else{
+                pressingSelectionButton = false;
             }
         }
     }
