@@ -289,7 +289,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer && opModeIsActive()) {
+        while (waitingAnswer) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isRed = true;
@@ -309,7 +309,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer && opModeIsActive()) {
+        while (waitingAnswer) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 isFirst = true;
@@ -329,7 +329,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer && opModeIsActive()) {
+        while (waitingAnswer) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 shouldPark = true;
@@ -349,7 +349,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         waitingAnswer = true;
-        while (waitingAnswer && opModeIsActive()) {
+        while (waitingAnswer) {
             if (gamepad1.a) {
                 waitingAnswer = false;
                 collectStack = true;
@@ -376,7 +376,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     private void confirmAnswers(){
         sleep(500);
         waitingAnswer = true;
-        while(waitingAnswer && opModeIsActive()){
+        while(waitingAnswer){
             if(gamepad1.b){
                 waitingAnswer = false;
                 askQuestions();
