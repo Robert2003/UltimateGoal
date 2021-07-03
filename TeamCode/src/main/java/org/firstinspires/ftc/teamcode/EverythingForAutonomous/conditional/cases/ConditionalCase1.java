@@ -49,8 +49,8 @@ public class ConditionalCase1 {
             wobbleTraj = drive.trajectoryBuilder(new Pose2d())
                     .splineTo(new Vector2d(80.80, 2.45), 0.544)
                     .build();
-            shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end(), false)
-                    .splineTo(new Vector2d(0, 0), 0)
+            shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
+                    .splineTo(new Vector2d(10, 10.6), 0)
                     .build();
             if(goalDetection.getPark())
                 parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
