@@ -44,7 +44,7 @@ public class AutonomousManagerIterative extends OpMode {
 
     @Override
     public void init() {
-        telemetry.addData("Q1", "Press X if you are not gay.");
+        telemetry.addData("Q1", "Press X if you are not.");
         telemetry.update();
     }
 

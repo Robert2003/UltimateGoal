@@ -434,6 +434,58 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             } else if (gamepad1.dpad_up && selectedAnswer > 1) {
                 selectedAnswer--;
                 showcaseAnswers();
+            } else if(gamepad1.dpad_right || gamepad1.dpad_left){
+                switch (selectedAnswer){
+                    case 1:
+                        isRed = !isRed;
+                        break;
+                    case 2:
+                        isFirst = !isFirst;
+                        break;
+                    case 3:
+                        shouldPark = !shouldPark;
+                        break;
+                    case 4:
+                        collectStack = !collectStack;
+                        break;
+                }
+                showcaseAnswers();
+            } else if(gamepad1.dpad_right){
+                if(selectedAnswer == 5){
+                    switch (selectedCase){
+                        case -1:
+                            selectedCase = 0;
+                            break;
+                        case 0:
+                            selectedCase = 1;
+                            break;
+                        case 1:
+                            selectedCase = 4;
+                            break;
+                        case 4:
+                            selectedCase = -1;
+                            break;
+                    }
+                }
+                showcaseAnswers();
+            } else if(gamepad1.dpad_left){
+                if(selectedAnswer == 5){
+                    switch (selectedCase){
+                        case -1:
+                            selectedCase = 4;
+                            break;
+                        case 4:
+                            selectedCase = 1;
+                            break;
+                        case 1:
+                            selectedCase = 0;
+                            break;
+                        case 0:
+                            selectedCase = -1;
+                            break;
+                    }
+                }
+                showcaseAnswers();
             }
         }
     }
