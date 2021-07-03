@@ -430,8 +430,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 else{
                     pressingSelectionButton = true;
                     firstFramePressing = true;
+                    sleep(200);
                 }
-                sleep(500);
             } else{
                 pressingSelectionButton = false;
             }
