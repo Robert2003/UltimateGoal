@@ -37,9 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(group = "Iterative Opmode")
 @Autonomous
-public class AutonomousManagerLinear extends OpMode {
+public class AutonomousManagerIterative extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 

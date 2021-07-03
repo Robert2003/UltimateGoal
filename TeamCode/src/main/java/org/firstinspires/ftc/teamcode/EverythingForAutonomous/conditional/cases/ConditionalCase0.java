@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.RobotDefinition_ForAuto;
-import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.AutonomousManagerLinear;
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.UltimateGoalDetectionConditional;
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 
@@ -74,7 +73,7 @@ public class ConditionalCase0 {
             robot.dropArm(670);
             goalDetection.sleep(1000);
             robot.dropWobble();
-            robot.toggleFlyWheel(true,3200);
+            robot.toggleFlyWheel(true,3150);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3,1000);
             robot.toggleFlyWheel(false);
