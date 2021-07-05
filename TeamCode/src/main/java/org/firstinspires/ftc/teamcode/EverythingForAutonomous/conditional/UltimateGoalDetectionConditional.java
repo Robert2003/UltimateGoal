@@ -61,7 +61,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    ElapsedTime runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
     boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
@@ -126,7 +126,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
         robot.init(hardwareMap);
 
-        askQuestions();
+        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
         showcaseAnswers();
         confirmAnswers();
 
