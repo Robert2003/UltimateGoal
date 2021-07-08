@@ -51,10 +51,7 @@ public class AutonomousManagerIterative extends OpMode {
 
     @Override
     public void init_loop() {
-        if (gamepad1.x) {
-            telemetry.addData("A1", "Thank you.");
-            telemetry.update();
-        }
+
     }
 
     @Override
