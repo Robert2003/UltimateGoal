@@ -26,11 +26,11 @@ public class ConditionalCase0 {
                     .splineTo(new Vector2d(58, 3), 6.02)
                     .build();
             wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                    .splineTo(new Vector2d(74, -20), 4.712)
+                    .splineTo(new Vector2d(92.67, -18.8), 3.644) // 74, -20 4.712
                     .build();
             if (goalDetection.getPark())
                 parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                        .lineToLinearHeading(new Pose2d(72, -10, 4.712))
+                        .lineToLinearHeading(new Pose2d(72, 10, 4.712))
                         .build();
         } else if (goalDetection.getIsRed() && !goalDetection.getIsFirst()) {
             wobbleTraj = drive.trajectoryBuilder(new Pose2d())
@@ -50,41 +50,51 @@ public class ConditionalCase0 {
                 parkTraj = drive.trajectoryBuilder(waitForOthersTraj.end())
                         .lineToLinearHeading(new Pose2d(70.17, 17.5, 0))
                         .build();
+        } else if(goalDetection.getIsFirst()) {
+            shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
+                    .splineTo(new Vector2d(58, -3), -6.02)
+                    .build();
+            wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                    .splineTo(new Vector2d(92.67, 23.8), -3.844) // 74, -20 4.712
+                    .build();
+            if (goalDetection.getPark())
+                parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                        .lineToLinearHeading(new Pose2d(72, -12.5, -4.712))
+                        .build();
         }
     }
 
     public void runCase() throws InterruptedException {
         robot.init(goalDetection.hardwareMap);
         goalDetection.sleep(goalDetection.getStartDelay());
-        if (goalDetection.getIsRed()) {
-            if (goalDetection.getIsFirst()) {
-                robot.toggleFlyWheel(true, 2970);
-                drive.followTrajectory(shootingPositionTraj);
-                robot.shootrings(3);
-                robot.toggleFlyWheel(false);
-                drive.followTrajectory(wobbleTraj);
-                robot.dropArm(670);
-                goalDetection.sleep(1000);
-                robot.dropWobble();
-                if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
-                robot.wobbleServo.setPosition(0.45);
-                goalDetection.sleep(400);
-                robot.dropArm(20);
-            } else {
-                drive.followTrajectory(wobbleTraj);
-                robot.dropArm(670);
-                goalDetection.sleep(1000);
-                robot.dropWobble();
-                robot.toggleFlyWheel(true, 2970);
-                drive.followTrajectory(shootingPositionTraj);
-                goalDetection.telemetry.addData("U", drive.getPoseEstimate().getHeading());
-                goalDetection.telemetry.update();
-                robot.shootrings(3, 1000);
-                robot.toggleFlyWheel(false);
-                drive.followTrajectory(waitForOthersTraj);
-                while (goalDetection.runtime.seconds() <= 25) ;
-                if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
-            }
+        goalDetection.telemetry.update();
+        if (goalDetection.getIsFirst()) {
+            robot.toggleFlyWheel(true, 2970);
+            drive.followTrajectory(shootingPositionTraj);
+            robot.shootrings(3);
+            robot.toggleFlyWheel(false);
+            drive.followTrajectory(wobbleTraj);
+            robot.dropArm(670);
+            goalDetection.sleep(1000);
+            robot.dropWobble();
+            if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
+            robot.wobbleServo.setPosition(0.45);
+            goalDetection.sleep(400);
+            robot.dropArm(20);
+        } else {
+            drive.followTrajectory(wobbleTraj);
+            robot.dropArm(670);
+            goalDetection.sleep(1000);
+            robot.dropWobble();
+            robot.toggleFlyWheel(true, 2970);
+            drive.followTrajectory(shootingPositionTraj);
+            goalDetection.telemetry.addData("U", drive.getPoseEstimate().getHeading());
+            goalDetection.telemetry.update();
+            robot.shootrings(3, 1000);
+            robot.toggleFlyWheel(false);
+            drive.followTrajectory(waitForOthersTraj);
+            while (goalDetection.runtime.seconds() <= 25) ;
+            if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
         }
     }
 

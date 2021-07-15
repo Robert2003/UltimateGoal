@@ -150,6 +150,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             else if (selectedCase == 4)
                 lastPosition = SkystoneDeterminationPipeline.RingPosition.FOUR;
 
+            startDelay *= 1000;
             switch (lastPosition) {
                 case NONE:
                     conditionalCase0.runCase();
@@ -421,7 +422,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
         else if (selectedCase == 4)
             telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
-        telemetry.addData("A6", "Start delay: " + startDelay + "s");
+        telemetry.addData("A6", "Start delay: " + startDelay + "s" + ((selectedAnswer == 6) ? " [X]" : ""));
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
     }
@@ -455,13 +456,13 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 telemetry.update();
             } else if (gamepad1.dpad_down) {
                 selectedAnswer++;
-                if (selectedAnswer == 6)
+                if (selectedAnswer == 7)
                     selectedAnswer = 1;
                 showcaseAnswers();
             } else if (gamepad1.dpad_up) {
                 selectedAnswer--;
                 if (selectedAnswer == 0)
-                    selectedAnswer = 5;
+                    selectedAnswer = 6;
                 showcaseAnswers();
             } else if (selectedAnswer != 5 && (gamepad1.dpad_right || gamepad1.dpad_left)) {
                 switch (selectedAnswer) {
