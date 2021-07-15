@@ -65,7 +65,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
     boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
-    int selectedCase;
+    int selectedCase, startDelay;
     //delays
     int collectStackDelay, parkDelay, shootDelay;
     int selectedAnswer = 1;
@@ -293,6 +293,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         return collectStack;
     }
 
+    public int getStartDelay() {
+        return startDelay;
+    }
+
     private void askQuestions() {
         telemetry.addData("Q1", "Is the robot on the red side? \n" +
                 "A - Yes\nX - No");
@@ -409,10 +413,15 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.addData("A2", "Line: " + (isFirst ? "FIRST" : "SECOND") + ((selectedAnswer == 2) ? " [X]" : ""));
         telemetry.addData("A3", "Park: " + (shouldPark ? "YES" : "NO") + ((selectedAnswer == 3) ? " [X]" : ""));
         telemetry.addData("A4", "Collect stack: " + (collectStack ? "YES" : "NO") + ((selectedAnswer == 4) ? " [X]" : ""));
-        if (selectedCase == -1) telemetry.addData("A5", "Detection" + ((selectedAnswer == 5) ? " [X]" : ""));
-        else if (selectedCase == 0) telemetry.addData("A5", "Case 0" + ((selectedAnswer == 5) ? " [X]" : ""));
-        else if (selectedCase == 1) telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
-        else if (selectedCase == 4) telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
+        if (selectedCase == -1)
+            telemetry.addData("A5", "Detection" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 0)
+            telemetry.addData("A5", "Case 0" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 1)
+            telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 4)
+            telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
+        telemetry.addData("A6", "Start delay: " + startDelay + "s");
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
     }
@@ -425,17 +434,17 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         while (waitingAnswer && !isStopRequested()) {
             if (gamepad1.b || gamepad1.y || gamepad1.dpad_right || gamepad1.dpad_left ||
                     gamepad1.dpad_up || gamepad1.dpad_down) {
-                if(pressingSelectionButton)
+                if (pressingSelectionButton)
                     firstFramePressing = false;
-                else{
+                else {
                     pressingSelectionButton = true;
                     firstFramePressing = true;
                     sleep(200);
                 }
-            } else{
+            } else {
                 pressingSelectionButton = false;
             }
-            if(pressingSelectionButton && !firstFramePressing)
+            if (pressingSelectionButton && !firstFramePressing)
                 continue;
             if (gamepad1.b) {
                 waitingAnswer = false;
@@ -468,6 +477,13 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                     case 4:
                         collectStack = !collectStack;
                         break;
+                    case 6:
+                        if(gamepad1.dpad_right)
+                            startDelay++;
+                        else
+                            startDelay--;
+                        if(startDelay < 0)
+                            startDelay = 0;
                 }
                 showcaseAnswers();
             } else if (gamepad1.dpad_right) {

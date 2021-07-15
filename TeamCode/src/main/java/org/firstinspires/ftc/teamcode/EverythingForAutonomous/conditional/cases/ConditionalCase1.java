@@ -71,6 +71,7 @@ public class ConditionalCase1 {
 
     public void runCase() throws InterruptedException {
         robot.init(goalDetection.hardwareMap);
+        goalDetection.sleep(goalDetection.getStartDelay());
         if(goalDetection.getIsRed() && goalDetection.getIsFirst()) {
             robot.toggleFlyWheel(true, 2970);
             drive.followTrajectory(shootingPositionTraj);

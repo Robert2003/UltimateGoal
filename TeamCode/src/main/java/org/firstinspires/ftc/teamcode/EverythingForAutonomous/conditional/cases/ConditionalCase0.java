@@ -15,25 +15,24 @@ public class ConditionalCase0 {
     Trajectory shootingPositionTraj, wobbleTraj, parkTraj, waitForOthersTraj;
     RobotDefinition_ForAuto robot;
 
-    public ConditionalCase0(UltimateGoalDetectionConditional goalDetection){
+    public ConditionalCase0(UltimateGoalDetectionConditional goalDetection) {
 
         this.goalDetection = goalDetection;
         drive = goalDetection.getDrive();
         robot = new RobotDefinition_ForAuto();
 
-        if(goalDetection.getIsRed() && goalDetection.getIsFirst()) {
+        if (goalDetection.getIsRed() && goalDetection.getIsFirst()) {
             shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
                     .splineTo(new Vector2d(58, 3), 6.02)
                     .build();
             wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                     .splineTo(new Vector2d(74, -20), 4.712)
                     .build();
-            if(goalDetection.getPark())
+            if (goalDetection.getPark())
                 parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                    .lineToLinearHeading(new Pose2d(72, -10, 4.712))
-                    .build();
-        }
-        else if(goalDetection.getIsRed() && !goalDetection.getIsFirst()){
+                        .lineToLinearHeading(new Pose2d(72, -10, 4.712))
+                        .build();
+        } else if (goalDetection.getIsRed() && !goalDetection.getIsFirst()) {
             wobbleTraj = drive.trajectoryBuilder(new Pose2d())
                     .lineToLinearHeading(new Pose2d(52.11, 1.5, 5.5531))
                     .build();
@@ -47,7 +46,7 @@ public class ConditionalCase0 {
             waitForOthersTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                     .lineToLinearHeading(new Pose2d(36.5, -4.3, 0))
                     .build();
-            if(goalDetection.getPark())
+            if (goalDetection.getPark())
                 parkTraj = drive.trajectoryBuilder(waitForOthersTraj.end())
                         .lineToLinearHeading(new Pose2d(70.17, 17.5, 0))
                         .build();
@@ -56,34 +55,36 @@ public class ConditionalCase0 {
 
     public void runCase() throws InterruptedException {
         robot.init(goalDetection.hardwareMap);
-        if(goalDetection.getIsRed() && goalDetection.getIsFirst()){
-            robot.toggleFlyWheel(true, 2970);
-            drive.followTrajectory(shootingPositionTraj);
-            robot.shootrings(3);
-            robot.toggleFlyWheel(false);
-            drive.followTrajectory(wobbleTraj);
-            robot.dropArm(670);
-            goalDetection.sleep(1000);
-            robot.dropWobble();
-            if(goalDetection.getPark()) drive.followTrajectory(parkTraj);
-            robot.wobbleServo.setPosition(0.45);
-            goalDetection.sleep(400);
-            robot.dropArm(20);
-        }
-        else if(goalDetection.getIsRed() && !goalDetection.getIsFirst()){
-            drive.followTrajectory(wobbleTraj);
-            robot.dropArm(670);
-            goalDetection.sleep(1000);
-            robot.dropWobble();
-            robot.toggleFlyWheel(true,2970);
-            drive.followTrajectory(shootingPositionTraj);
-            goalDetection.telemetry.addData("U", drive.getPoseEstimate().getHeading());
-            goalDetection.telemetry.update();
-            robot.shootrings(3,1000);
-            robot.toggleFlyWheel(false);
-            drive.followTrajectory(waitForOthersTraj);
-            while(goalDetection.runtime.seconds() <= 25);
-            if(goalDetection.getPark()) drive.followTrajectory(parkTraj);
+        goalDetection.sleep(goalDetection.getStartDelay());
+        if (goalDetection.getIsRed()) {
+            if (goalDetection.getIsFirst()) {
+                robot.toggleFlyWheel(true, 2970);
+                drive.followTrajectory(shootingPositionTraj);
+                robot.shootrings(3);
+                robot.toggleFlyWheel(false);
+                drive.followTrajectory(wobbleTraj);
+                robot.dropArm(670);
+                goalDetection.sleep(1000);
+                robot.dropWobble();
+                if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
+                robot.wobbleServo.setPosition(0.45);
+                goalDetection.sleep(400);
+                robot.dropArm(20);
+            } else {
+                drive.followTrajectory(wobbleTraj);
+                robot.dropArm(670);
+                goalDetection.sleep(1000);
+                robot.dropWobble();
+                robot.toggleFlyWheel(true, 2970);
+                drive.followTrajectory(shootingPositionTraj);
+                goalDetection.telemetry.addData("U", drive.getPoseEstimate().getHeading());
+                goalDetection.telemetry.update();
+                robot.shootrings(3, 1000);
+                robot.toggleFlyWheel(false);
+                drive.followTrajectory(waitForOthersTraj);
+                while (goalDetection.runtime.seconds() <= 25) ;
+                if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
+            }
         }
     }
 
