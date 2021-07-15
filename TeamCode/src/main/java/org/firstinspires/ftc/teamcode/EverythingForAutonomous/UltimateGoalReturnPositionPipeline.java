@@ -12,8 +12,8 @@ import org.opencv.imgproc.Imgproc;
 
 @Config
 public class UltimateGoalReturnPositionPipeline extends OpenCvPipeline {
-    public static int BOTTOMLEFTX = 505;
-    public static int BOTTOMLEFTY = 238;//bot left coordinates of small 1 ring box
+    public static int BOTTOMLEFTX = 505; //505
+    public static int BOTTOMLEFTY = 238; //238 //bot left coordinates of small 1 ring box
     public static int WIDTH = 105;//width of 1 ring box
     public static int HEIGHT1 = 49;//height of 1 ring
     public static int BUFFER = 20;//12

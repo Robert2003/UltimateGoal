@@ -191,7 +191,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+        public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15); // Was final
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
@@ -425,6 +425,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.addData("A6", "Start delay: " + startDelay + "s" + ((selectedAnswer == 6) ? " [X]" : ""));
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
+        updateDetectionRectangle();
     }
 
     private void confirmAnswers() {
@@ -479,11 +480,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                         collectStack = !collectStack;
                         break;
                     case 6:
-                        if(gamepad1.dpad_right)
+                        if (gamepad1.dpad_right)
                             startDelay++;
                         else
                             startDelay--;
-                        if(startDelay < 0)
+                        if (startDelay < 0)
                             startDelay = 0;
                 }
                 showcaseAnswers();
@@ -520,6 +521,16 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 }
                 showcaseAnswers();
             }
+        }
+    }
+
+    private void updateDetectionRectangle() {
+        if((isRed && isFirst) || (!isRed && !isFirst)) {
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.x = 505;
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 238;
+        } else{
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.x = 200; //MODIFY
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 100; //MODIFY
         }
     }
 
