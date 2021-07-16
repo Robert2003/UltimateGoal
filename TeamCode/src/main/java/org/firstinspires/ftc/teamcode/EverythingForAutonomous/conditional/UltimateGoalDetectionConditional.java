@@ -65,7 +65,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
     boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
-    int selectedCase, startDelay;
+    int selectedCase, startDelay = 0;
     //delays
     int collectStackDelay, parkDelay, shootDelay;
     int selectedAnswer = 1;
@@ -96,6 +96,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         wobbleServo.setPosition(1);
         servo.setPosition(0.55);
 
+        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
+        showcaseAnswers();
+        confirmAnswers();
+
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
@@ -111,7 +115,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
+        pipeline = new SkystoneDeterminationPipeline(this);
         webCam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
@@ -126,10 +130,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
         robot.init(hardwareMap);
 
-        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
-        showcaseAnswers();
-        confirmAnswers();
-
         ConditionalCase0 conditionalCase0 = new ConditionalCase0(this);
         ConditionalCase1 conditionalCase1 = new ConditionalCase1(this);
         ConditionalCase4 conditionalCase4 = new ConditionalCase4(this);
@@ -137,7 +137,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive() && !finishedAuto) {
-            while (runtime.milliseconds() < 100) ;
+            while (runtime.milliseconds() < 1000) ;
 
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
@@ -176,6 +176,42 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         /*
          * An enum to define the skystone position
          */
+
+        public Point REGION1_TOPLEFT_ANCHOR_POINT;
+        Point region1_pointA;
+        Point region1_pointB;
+
+        public SkystoneDeterminationPipeline(UltimateGoalDetectionConditional cond){
+            boolean isRed = cond.getIsRed();
+            boolean isFirst = cond.getIsFirst();
+            if(isRed) {
+                if (isFirst) {
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+                    cond.telemetry.addData("C", "op1");
+                } else{
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(200, 100);
+                    cond.telemetry.addData("C", "op2");
+                }
+            } else{
+                if (isFirst) {
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+                    cond.telemetry.addData("C", "op3");
+                } else{
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 0);
+                    cond.telemetry.addData("C", "op4");
+                }
+            }
+            region1_pointA = new Point(
+                    REGION1_TOPLEFT_ANCHOR_POINT.x,
+                    REGION1_TOPLEFT_ANCHOR_POINT.y);
+            region1_pointB = new Point(
+                    REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                    REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            cond.telemetry.update();
+        }
+
+
+
         public enum RingPosition {
             FOUR,
             ONE,
@@ -191,7 +227,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         /*
          * The core values which define the location and size of the sample regions
          */
-        public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15); // Was final
+
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
@@ -199,12 +235,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         final int FOUR_RING_THRESHOLD = 149;
         final int ONE_RING_THRESHOLD = 136;
 
-        Point region1_pointA = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x,
-                REGION1_TOPLEFT_ANCHOR_POINT.y);
-        Point region1_pointB = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
 
         /*
          * Working variables
@@ -239,12 +270,14 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
             avg1 = (int) Core.mean(region1_Cb).val[0];
 
-            Imgproc.rectangle(
+            /*Imgproc.rectangle(
                     input, // Buffer to draw on
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
                     BLUE, // The color the rectangle is drawn in
                     2); // Thickness of the rectangle lines
+
+             */
 
             position = RingPosition.FOUR; // Record our analysis
             if (avg1 > FOUR_RING_THRESHOLD) {
@@ -259,7 +292,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                     input, // Buffer to draw on
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
-                    GREEN, // The color the rectangle is drawn in
+                    BLUE, // The color the rectangle is drawn in
                     -1); // Negative thickness means solid fill
 
             return input;
@@ -425,7 +458,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.addData("A6", "Start delay: " + startDelay + "s" + ((selectedAnswer == 6) ? " [X]" : ""));
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
-        updateDetectionRectangle();
     }
 
     private void confirmAnswers() {
@@ -523,8 +555,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             }
         }
     }
-
-    private void updateDetectionRectangle() {
+    /*
+    public void updateDetectionRectangle() {
         if((isRed && isFirst) || (!isRed && !isFirst)) {
             pipeline.REGION1_TOPLEFT_ANCHOR_POINT.x = 505;
             pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 238;
@@ -533,5 +565,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 100; //MODIFY
         }
     }
+     */
 
 }
