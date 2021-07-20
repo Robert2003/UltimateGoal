@@ -260,7 +260,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         @Override
         public void init(Mat firstFrame) {
             inputToCb(firstFrame);
-
             region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
         }
 

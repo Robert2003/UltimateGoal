@@ -10,11 +10,10 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import static java.lang.Thread.sleep;
 
-public class RobotDefinition_ForTeleOP
-{
-    public DcMotor intake1   = null, intake2 = null;
+public class RobotDefinition_ForTeleOP {
+    public DcMotor intake1 = null, intake2 = null;
     public DcMotor wobbleArm = null;
-    public DcMotorEx flyWheel  = null;
+    public DcMotorEx flyWheel = null;
 
     public Servo servo, wobbleServo, intakeServo;
 
@@ -23,21 +22,20 @@ public class RobotDefinition_ForTeleOP
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    public static int GOAL_RPM = 3200;
-    public static int POWERSHOTS_RPM = 2800;
+    public static int GOAL_RPM = 3700; //era 3200
+    public static int POWERSHOTS_RPM = 3150; // era 2800
 
-    boolean  trigger = false;
+    boolean trigger = false;
 
 
     HardwareMap hardwareMap = null;
 
-    public void init(HardwareMap ahwMap)
-    {
+    public void init(HardwareMap ahwMap) {
         hardwareMap = ahwMap;
 
-        intake1   = hardwareMap.get(DcMotor.class, "intake1");
-        intake2   = hardwareMap.get(DcMotor.class, "intake2");
-        flyWheel  = hardwareMap.get(DcMotorEx.class, "flyWheel");
+        intake1 = hardwareMap.get(DcMotor.class, "intake1");
+        intake2 = hardwareMap.get(DcMotor.class, "intake2");
+        flyWheel = hardwareMap.get(DcMotorEx.class, "flyWheel");
         wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
 
         intake2.setDirection(DcMotor.Direction.REVERSE);
@@ -46,7 +44,7 @@ public class RobotDefinition_ForTeleOP
 
         flyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        servo       = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(Servo.class, "servo");
         wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
         intakeServo = hardwareMap.get(Servo.class, "intakeServo");
         servo.setPosition(0.55);
@@ -62,47 +60,36 @@ public class RobotDefinition_ForTeleOP
         ));
     }
 
-    public void Gamepad1Actions(Gamepad gamepad1)
-    {
-        if(gamepad1.dpad_up)
+    public void Gamepad1Actions(Gamepad gamepad1) {
+        if (gamepad1.dpad_up)
             intakeServo.setPosition(1);
-        if(gamepad1.dpad_down)
+        if (gamepad1.dpad_down)
             intakeServo.setPosition(0.42);
     }
 
-    public void Gamepad2Actions(Gamepad gamepad2, double x, double y)
-    {
+    public void Gamepad2Actions(Gamepad gamepad2, double x, double y) {
         /**WobbleArm*/
-        if(gamepad2.left_trigger!=0)
-        {
+        if (gamepad2.left_trigger != 0) {
             trigger = true;
             wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             wobbleArm.setPower(-0.5);
-        }
-        else if(trigger)
-        {
+        } else if (trigger) {
             trigger = false;
             wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             wobbleArm.setPower(0);
         }
 
-        if(!trigger)
-        {
-            if(gamepad2.left_stick_button)
-            {
+        if (!trigger) {
+            if (gamepad2.left_stick_button) {
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wobbleArm.setTargetPosition(799);
                 wobbleArm.setPower(0.5);
-            }
-            else if(gamepad2.right_stick_button)
-            {
+            } else if (gamepad2.right_stick_button) {
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wobbleArm.setTargetPosition(480);
                 wobbleArm.setPower(0.7);
-            }
-            else if(Math.abs(wobbleArm.getTargetPosition()-wobbleArm.getCurrentPosition()) < 15)
-            {
+            } else if (Math.abs(wobbleArm.getTargetPosition() - wobbleArm.getCurrentPosition()) < 15) {
                 wobbleArm.setTargetPosition(wobbleArm.getCurrentPosition());
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wobbleArm.setPower(1);
@@ -122,17 +109,17 @@ public class RobotDefinition_ForTeleOP
         }
 
         /**WobbleServo*/
-        if(gamepad2.dpad_left)
+        if (gamepad2.dpad_left)
             wobbleServo.setPosition(0.53);
-        if(gamepad2.dpad_right)
+        if (gamepad2.dpad_right)
             wobbleServo.setPosition(0);
-        if(gamepad2.dpad_down)
+        if (gamepad2.dpad_down)
             wobbleServo.setPosition(0.3);
 
         /**FlyWheel*/
-        if(gamepad2.right_bumper && !gamepad2.dpad_up)
+        if (gamepad2.right_bumper && !gamepad2.dpad_up)
             flyWheel.setVelocity(rpmToTicksPerSecond(GOAL_RPM));
-        else if(gamepad2.right_bumper)
+        else if (gamepad2.right_bumper)
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else
             flyWheel.setVelocity(10);
@@ -142,17 +129,16 @@ public class RobotDefinition_ForTeleOP
         return rpm * MOTOR_TICKS_PER_REV / MOTOR_GEAR_RATIO / 60;
     }
 
-    public void toggleFlyWheel(boolean shouldTurnOn)
-    {
-        if(shouldTurnOn==true)
+    public void toggleFlyWheel(boolean shouldTurnOn) {
+        if (shouldTurnOn == true)
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
         else
             flyWheel.setVelocity(0);
     }
 
     public void shootrings(int timesToShoot) throws InterruptedException {
-        while(Math.abs(flyWheel.getVelocity()-rpmToTicksPerSecond(POWERSHOTS_RPM)) > 20);
-        for(int i = 1; i <= timesToShoot; i++) {
+        while (Math.abs(flyWheel.getVelocity() - rpmToTicksPerSecond(POWERSHOTS_RPM)) > 20) ;
+        for (int i = 1; i <= timesToShoot; i++) {
             servo.setPosition(0);
             sleep(400);
             servo.setPosition(0.55);

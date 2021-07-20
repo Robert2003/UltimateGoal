@@ -60,7 +60,7 @@ public class ConditionalCase4 {
                 }
                 if (goalDetection.getPark() && goalDetection.getCollectStack()) {
                     parkTraj = drive.trajectoryBuilder(fourthRingTraj.end())
-                            .lineTo(new Vector2d(80, -29))
+                            .lineTo(new Vector2d(80, 49))
                             .addTemporalMarker(0.1, () -> {
                                 robot.wobbleServo.setPosition(0.45);
                                 robot.dropArm(20);
