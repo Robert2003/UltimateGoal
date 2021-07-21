@@ -177,7 +177,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          * An enum to define the skystone position
          */
 
-        public Point REGION1_TOPLEFT_ANCHOR_POINT;
+        public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
         Point region1_pointA;
         Point region1_pointB;
 

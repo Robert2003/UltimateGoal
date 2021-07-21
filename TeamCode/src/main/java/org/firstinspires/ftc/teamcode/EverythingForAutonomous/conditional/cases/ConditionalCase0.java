@@ -12,7 +12,7 @@ public class ConditionalCase0 {
 
     UltimateGoalDetectionConditional goalDetection;
     SampleMecanumDrive drive;
-    Trajectory shootingPositionTraj, wobbleTraj, parkTraj, waitForOthersTraj;
+    Trajectory shootingPositionTraj, wobbleTraj, parkTraj, waitForOthersTraj, backTraj;
     RobotDefinition_ForAuto robot;
 
     public ConditionalCase0(UltimateGoalDetectionConditional goalDetection) {
@@ -21,46 +21,73 @@ public class ConditionalCase0 {
         drive = goalDetection.getDrive();
         robot = new RobotDefinition_ForAuto();
 
-        if (goalDetection.getIsRed() && goalDetection.getIsFirst()) {
-            shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                    .splineTo(new Vector2d(58, 3), 6.02)
-                    .build();
-            wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                    .splineTo(new Vector2d(92.67, -18.8), 3.644) // 74, -20 4.712
-                    .build();
-            if (goalDetection.getPark())
-                parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                        .lineToLinearHeading(new Pose2d(72, 10, 4.712))
+        if (goalDetection.getIsRed()) {
+            if (goalDetection.getIsFirst()) {
+                shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
+                        .splineTo(new Vector2d(58, 3), 6.02)
                         .build();
-        } else if (goalDetection.getIsRed() && !goalDetection.getIsFirst()) {
-            wobbleTraj = drive.trajectoryBuilder(new Pose2d())
-                    .lineToLinearHeading(new Pose2d(52.11, 1.5, 5.5531))
-                    .build();
-            shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
-                    .lineToLinearHeading(new Pose2d(46.43, 3.25, 0))
-                    .addTemporalMarker(0.1, () -> {
-                        robot.wobbleServo.setPosition(0.45);
-                        robot.dropArm(20);
-                    })
-                    .build();
-            waitForOthersTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                    .lineToLinearHeading(new Pose2d(36.5, -4.3, 0))
-                    .build();
-            if (goalDetection.getPark())
-                parkTraj = drive.trajectoryBuilder(waitForOthersTraj.end())
-                        .lineToLinearHeading(new Pose2d(70.17, 17.5, 0))
+                wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                        .splineTo(new Vector2d(92.67, -18.8), 3.644) // 74, -20 4.712
                         .build();
-        } else if(goalDetection.getIsFirst()) {
-            shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                    .splineTo(new Vector2d(58, -3), -6.02)
-                    .build();
-            wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                    .splineTo(new Vector2d(92.67, 23.8), -3.844) // 74, -20 4.712
-                    .build();
-            if (goalDetection.getPark())
-                parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                        .lineToLinearHeading(new Pose2d(72, -12.5, -4.712))
+                if (goalDetection.getPark())
+                    parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                            .lineToLinearHeading(new Pose2d(72, 10, 4.712))
+                            .build();
+            } else {
+                wobbleTraj = drive.trajectoryBuilder(new Pose2d())
+                        .lineToLinearHeading(new Pose2d(52.11, 1.5, 5.5531))
                         .build();
+                shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
+                        .lineToLinearHeading(new Pose2d(46.43, 3.25, 0))
+                        .addTemporalMarker(0.1, () -> {
+                            robot.wobbleServo.setPosition(0.45);
+                            robot.dropArm(20);
+                        })
+                        .build();
+                waitForOthersTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                        .lineToLinearHeading(new Pose2d(36.5, -4.3, 0))
+                        .build();
+                if (goalDetection.getPark())
+                    parkTraj = drive.trajectoryBuilder(waitForOthersTraj.end())
+                            .lineToLinearHeading(new Pose2d(70.17, 17.5, 0))
+                            .build();
+            }
+        } else {
+            if (goalDetection.getIsFirst()) {
+                shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
+                        .splineTo(new Vector2d(58, -3), -5.92)
+                        .build();
+                wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                        .splineTo(new Vector2d(92.67, 23.8), -3.844) // 74, -20 4.712
+                        .build();
+                if (goalDetection.getPark()) {
+                    backTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                            .lineToLinearHeading(new Pose2d(95, -12.5, 0))
+                            .build();
+                    parkTraj = drive.trajectoryBuilder(backTraj.end())
+                            .lineToLinearHeading(new Pose2d(72, -12.5, 0))
+                            .build();
+                }
+
+            } else {
+                wobbleTraj = drive.trajectoryBuilder(new Pose2d())
+                        .lineToLinearHeading(new Pose2d(52.11, 7, -0.25))
+                        .build();
+                shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
+                        .lineToLinearHeading(new Pose2d(46.43, 0, -0.16)) // y era -3.25
+                        .addTemporalMarker(0.1, () -> {
+                            robot.wobbleServo.setPosition(0.45);
+                            robot.dropArm(20);
+                        })
+                        .build();
+                waitForOthersTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                        .lineToLinearHeading(new Pose2d(36.5, 4.3, 0))
+                        .build();
+                if (goalDetection.getPark())
+                    parkTraj = drive.trajectoryBuilder(waitForOthersTraj.end())
+                            .lineToLinearHeading(new Pose2d(70.17, -17.5, 0))
+                            .build();
+            }
         }
     }
 
@@ -94,7 +121,10 @@ public class ConditionalCase0 {
             robot.toggleFlyWheel(false);
             drive.followTrajectory(waitForOthersTraj);
             while (goalDetection.runtime.seconds() <= 25) ;
-            if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
+            if (goalDetection.getPark()) {
+                if(!goalDetection.getIsRed()) drive.followTrajectory(backTraj);
+                drive.followTrajectory(parkTraj);
+            }
         }
     }
 
