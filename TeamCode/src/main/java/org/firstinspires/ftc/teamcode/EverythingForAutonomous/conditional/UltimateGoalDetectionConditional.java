@@ -187,18 +187,18 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             if(isRed) {
                 if (isFirst) {
                     REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-                    cond.telemetry.addData("C", "op1");
+                    cond.telemetry.addData("C", "red first");
                 } else{
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(200, 100);
-                    cond.telemetry.addData("C", "op2");
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(195, 270);
+                    cond.telemetry.addData("C", "red second");
                 }
             } else{
                 if (isFirst) {
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-                    cond.telemetry.addData("C", "op3");
+                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(194, 250);
+                    cond.telemetry.addData("C", "blue first");
                 } else{
                     REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 0);
-                    cond.telemetry.addData("C", "op4");
+                    cond.telemetry.addData("C", "blue second");
                 }
             }
             region1_pointA = new Point(
