@@ -63,10 +63,14 @@ public class CameraAdjusting extends LinearOpMode {
         Point region4_pointB;
 
         public SkystoneDeterminationPipeline() {
-            REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15); //red first
-            REGION2_TOPLEFT_ANCHOR_POINT = new Point(195, 270); //red second
-            REGION3_TOPLEFT_ANCHOR_POINT = new Point(194, 260); //blue first
-            REGION4_TOPLEFT_ANCHOR_POINT = new Point(181, 0); //blue second
+            REGION1_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+                    SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT;
+            REGION2_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+                    SkystoneDeterminationPipeline.REGION2_TOPLEFT_ANCHOR_POINT;
+            REGION3_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+                    SkystoneDeterminationPipeline.REGION3_TOPLEFT_ANCHOR_POINT;
+            REGION4_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+                    SkystoneDeterminationPipeline.REGION4_TOPLEFT_ANCHOR_POINT;
 
             region1_pointA = new Point(
                     REGION1_TOPLEFT_ANCHOR_POINT.x,

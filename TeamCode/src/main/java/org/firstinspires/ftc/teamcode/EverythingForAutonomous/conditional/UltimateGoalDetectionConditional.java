@@ -64,7 +64,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
-    boolean isRed, isFirst, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
+    boolean isRed = true, isFirst= true, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
     int selectedCase, startDelay = 0;
     //delays
     int collectStackDelay, parkDelay, shootDelay;
@@ -78,6 +78,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
+        showcaseAnswers();
+        confirmAnswers();
+
         DcMotorEx flyWheel = null;
         DcMotor wobbleArm = null;
         Servo wobbleServo, servo, intakeServo;
@@ -95,10 +100,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         intake2.setDirection(DcMotor.Direction.REVERSE);
         wobbleServo.setPosition(1);
         servo.setPosition(0.55);
-
-        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
-        showcaseAnswers();
-        confirmAnswers();
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
@@ -177,7 +178,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          * An enum to define the skystone position
          */
 
-        public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+        //public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15); //red first
+        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195, 270); //red second
+        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194, 260); //blue first
+        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181, 0); //blue second
         Point region1_pointA;
         Point region1_pointB;
 
@@ -186,18 +191,17 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             boolean isFirst = cond.getIsFirst();
             if(isRed) {
                 if (isFirst) {
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
                     cond.telemetry.addData("C", "red first");
                 } else{
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(195, 270);
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION2_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "red second");
                 }
             } else{
                 if (isFirst) {
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(194, 250);
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION3_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "blue first");
                 } else{
-                    REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 0);
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION4_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "blue second");
                 }
             }
@@ -209,8 +213,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                     REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
             cond.telemetry.update();
         }
-
-
 
         public enum RingPosition {
             FOUR,
