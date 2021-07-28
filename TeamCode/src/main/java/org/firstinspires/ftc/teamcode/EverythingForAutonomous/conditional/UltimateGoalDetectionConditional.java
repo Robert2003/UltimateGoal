@@ -124,7 +124,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         // landscape orientation, though.
         webCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT));
+        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(800, 600, OpenCvCameraRotation.SIDEWAYS_LEFT)); //320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT)
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
@@ -179,10 +179,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          */
 
         //public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15); //red first
-        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195, 270); //red second
-        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194, 260); //blue first
-        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181, 0); //blue second
+        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 15 * 2.5); //red first
+        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195 * 2.5, 270 * 2.5); //red second
+        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194 * 2.5, 260 * 2.5); //blue first
+        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 0 * 2.5); //blue second
         Point region1_pointA;
         Point region1_pointB;
 
@@ -231,8 +231,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          */
 
 
-        static final int REGION_WIDTH = 35;
-        static final int REGION_HEIGHT = 25;
+        public static final float REGION_WIDTH = 35 * 2.5f;
+        public static final float REGION_HEIGHT = 25 * 2.5f;
 
         final int FOUR_RING_THRESHOLD = 149;
         final int ONE_RING_THRESHOLD = 136;

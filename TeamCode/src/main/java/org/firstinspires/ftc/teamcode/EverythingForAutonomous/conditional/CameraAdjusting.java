@@ -38,7 +38,7 @@ public class CameraAdjusting extends LinearOpMode {
         // landscape orientation, though.
         webCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT));
+        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(800, 600, OpenCvCameraRotation.SIDEWAYS_LEFT));
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
         waitForStart();
@@ -122,8 +122,8 @@ public class CameraAdjusting extends LinearOpMode {
          */
 
 
-        static final int REGION_WIDTH = 35;
-        static final int REGION_HEIGHT = 25;
+        static final float REGION_WIDTH = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.REGION_WIDTH;
+        static final float REGION_HEIGHT = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.REGION_HEIGHT;
 
         final int FOUR_RING_THRESHOLD = 149;
         final int ONE_RING_THRESHOLD = 136;
