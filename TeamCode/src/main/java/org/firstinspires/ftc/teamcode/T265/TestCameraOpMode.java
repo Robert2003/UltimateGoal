@@ -15,17 +15,14 @@ import com.spartronics4915.lib.T265Camera;
 public class TestCameraOpMode extends OpMode {
     // We treat this like a singleton because there should only ever be one object per camera
     private static T265Camera slamra = null;
+    Pose2d startingPose = new Pose2d(1, 1, new Rotation2d());
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
     @Override
     public void init() {
-        if (slamra == null) {
-            slamra = new T265Camera(new Transform2d(), 0.1, hardwareMap.appContext);
-        }
-        slamra.setPose(new Pose2d());
-        //slamra.free();
-        //slamra = new T265Camera(new Transform2d(), 0.1, hardwareMap.appContext);
+        slamra = new T265Camera(new Transform2d(), 0.1, hardwareMap.appContext);
+        slamra.setPose(startingPose);
     }
 
     @Override
