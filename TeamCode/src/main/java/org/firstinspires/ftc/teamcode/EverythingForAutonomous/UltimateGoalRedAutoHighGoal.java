@@ -127,13 +127,13 @@ public class UltimateGoalRedAutoHighGoal extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(39, -11, 6.2))
                     .build();
             Trajectory thirdRing_4 = drive.trajectoryBuilder(secondRing_4.end(), true)
-                    .lineToLinearHeading(new Pose2d(34.5, -11, 6.25))
+                    .lineToLinearHeading(new Pose2d(34.5, -11, 6.22))
                     .addTemporalMarker(0.1, () -> {
                         robot.toggleFlyWheel(true, 3080);
                     })
                     .build();
             Trajectory fourthRing_4 = drive.trajectoryBuilder(thirdRing_4.end(), true)
-                    .lineToLinearHeading(new Pose2d(20, -11, 6.25))
+                    .lineToLinearHeading(new Pose2d(20, -11, 6.22))
                     .build();
             Trajectory secondWobbleGoal_4 = drive.trajectoryBuilder(fourthRing_4.end(), true)
                     .lineToLinearHeading(new Pose2d(15.73, 1.56, 4.43))

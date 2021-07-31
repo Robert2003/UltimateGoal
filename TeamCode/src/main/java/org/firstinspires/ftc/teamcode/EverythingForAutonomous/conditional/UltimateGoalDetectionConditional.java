@@ -370,7 +370,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
         telemetry.addData("C", "Press Y to continue.");
         telemetry.update();
-
         while (!gamepad1.y && !isStopRequested()) ;
 
         telemetry.addData("Q3", "Should the robot park? \n" +
