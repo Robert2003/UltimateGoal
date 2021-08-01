@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.EverythingForAutonomous;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -30,10 +31,6 @@ public class RobotDefinition_ForAuto
     public static int TOWER_RPM = 3200;
     public static int POWERSHOTS_RPM = 2800;
 
-    double max;
-
-    boolean supress2 = false, buttonPressed = false;
-
     HardwareMap hardwareMap = null;
     private ElapsedTime period = new ElapsedTime();
 
@@ -61,6 +58,9 @@ public class RobotDefinition_ForAuto
         intakeServo.setPosition(1);
         wobbleServo.setPosition(0.6);
 
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
         MotorConfigurationType motorConfigurationType = flyWheel.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
         flyWheel.setMotorType(motorConfigurationType);

@@ -12,7 +12,6 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,7 +51,7 @@ import org.firstinspires.ftc.teamcode.Utils.MathFunctions;
  * This sample utilizes the SampleMecanumDriveCancelable.java class.
  */
 @TeleOp(group = "advanced")
-@Disabled
+//@Disabled
 public class TeleOP_Augmented_T265 extends LinearOpMode {
     // Define 2 states, drive control or automatic control
     enum Mode {

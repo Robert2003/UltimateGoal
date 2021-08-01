@@ -34,10 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 @Autonomous
-//@Disabled
+@Disabled
 public class ConditionalIterative extends OpMode {
 
     public enum Side

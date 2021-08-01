@@ -4,9 +4,8 @@ import android.util.Pair;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
-import static java.lang.Math.atan2;
-
-public class MathFunctions {
+public class MathFunctions
+{
     public static Pair<Double, Double> RobotPosition(Vector2d RobotPosition, Vector2d TowerPosition)
     {
         /*double X = abs(RobotPosition.getX()-TowerPosition.getX());
@@ -14,10 +13,11 @@ public class MathFunctions {
 
         double distance = sqrt(X*X+Y*Y);
          */
-        Vector2d difference = RobotPosition.minus(TowerPosition);
-        double distance = difference.norm();
 
-        double angle = atan2(difference.getY(), difference.getX());
+        //Vector2d difference = RobotPosition.minus(TowerPosition);
+        double distance = RobotPosition.distTo(TowerPosition);
+
+        double angle = RobotPosition.angleBetween(TowerPosition);
         Pair<Double, Double> Position = new Pair<>(distance, angle);
 
         return Position;

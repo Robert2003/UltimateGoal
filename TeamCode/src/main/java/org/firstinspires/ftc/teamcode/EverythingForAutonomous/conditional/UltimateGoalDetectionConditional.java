@@ -23,15 +23,9 @@ package org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -63,11 +57,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
 
-    public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
+    //public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
     boolean isRed = true, isFirst= true, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
     int selectedCase, startDelay = 0;
     //delays
-    int collectStackDelay, parkDelay, shootDelay;
+    //int collectStackDelay, parkDelay, shootDelay;
     int selectedAnswer = 1;
 
     OpenCvWebcam webCam;
@@ -75,6 +69,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     String WEBCAM_NAME = "Webcam";
 
     SampleMecanumDrive drive;
+    RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,35 +78,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         showcaseAnswers();
         confirmAnswers();
 
-        DcMotorEx flyWheel = null;
-        DcMotor wobbleArm = null;
-        Servo wobbleServo, servo, intakeServo;
-        flyWheel = hardwareMap.get(DcMotorEx.class, "flyWheel");
-        wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
-        servo = hardwareMap.get(Servo.class, "servo");
-        wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
-        wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         drive = new SampleMecanumDrive(hardwareMap, false);
-        DcMotor intake1 = null, intake2 = null;
-        intake1 = hardwareMap.get(DcMotor.class, "intake1");
-        intake2 = hardwareMap.get(DcMotor.class, "intake2");
-        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        intakeServo.setPosition(0.9);
-        intake2.setDirection(DcMotor.Direction.REVERSE);
-        wobbleServo.setPosition(1);
-        servo.setPosition(0.55);
-
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
-        MotorConfigurationType motorConfigurationType = flyWheel.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-        flyWheel.setMotorType(motorConfigurationType);
-
-        flyWheel.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d,
-                MOTOR_VELO_PID.f * 12 / hardwareMap.voltageSensor.iterator().next().getVoltage()
-        ));
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -128,12 +96,12 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
-        RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
         robot.init(hardwareMap);
 
         ConditionalCase0 conditionalCase0 = new ConditionalCase0(this);
         ConditionalCase1 conditionalCase1 = new ConditionalCase1(this);
         ConditionalCase4 conditionalCase4 = new ConditionalCase4(this);
+
         waitForStart();
         runtime.reset();
 
@@ -145,6 +113,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             telemetry.update();
 
             SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
+
             if (selectedCase == 0) lastPosition = SkystoneDeterminationPipeline.RingPosition.NONE;
             else if (selectedCase == 1)
                 lastPosition = SkystoneDeterminationPipeline.RingPosition.ONE;
