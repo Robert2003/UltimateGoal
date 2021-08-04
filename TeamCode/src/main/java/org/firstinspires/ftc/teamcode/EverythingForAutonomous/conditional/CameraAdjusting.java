@@ -41,6 +41,12 @@ public class CameraAdjusting extends LinearOpMode {
         webCam.openCameraDeviceAsync(() -> webCam.startStreaming(800, 600, OpenCvCameraRotation.SIDEWAYS_LEFT));
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
+
+        while(!isStopRequested()){
+            sleep(1500);
+            telemetry.addData("Disks", pipeline.position);
+            telemetry.update();
+        }
         waitForStart();
     }
 

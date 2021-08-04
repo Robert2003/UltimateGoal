@@ -58,7 +58,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     //public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
-    boolean isRed = true, isFirst= true, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
+    boolean isRed = true, isFirst= true, deliverWobble, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
     int selectedCase, startDelay = 0;
     //delays
     //int collectStackDelay, parkDelay, shootDelay;
@@ -297,6 +297,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         return collectStack;
     }
 
+    public boolean getDeliverWobble(){ return deliverWobble; }
+
     public int getStartDelay() {
         return startDelay;
     }
@@ -409,6 +411,26 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         telemetry.update();
 
         while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q6", "Should the robot deliver the second wobble? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                deliverWobble = true;
+            } else if (gamepad1.x) {
+                deliverWobble = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
     }
 
     private void showcaseAnswers() {
@@ -424,7 +446,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
             telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
         else if (selectedCase == 4)
             telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
-        telemetry.addData("A6", "Start delay: " + startDelay + "s" + ((selectedAnswer == 6) ? " [X]" : ""));
+        telemetry.addData("A6", "Deliver second wobble: " + (deliverWobble ? "YES" : "NO") + ((selectedAnswer == 6) ? " [X]" : ""));
+        telemetry.addData("A7", "Start delay: " + startDelay + "s" + ((selectedAnswer == 7) ? " [X]" : ""));
         telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
         telemetry.update();
     }
@@ -458,13 +481,13 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                 telemetry.update();
             } else if (gamepad1.dpad_down) {
                 selectedAnswer++;
-                if (selectedAnswer == 7)
+                if (selectedAnswer == 8)
                     selectedAnswer = 1;
                 showcaseAnswers();
             } else if (gamepad1.dpad_up) {
                 selectedAnswer--;
                 if (selectedAnswer == 0)
-                    selectedAnswer = 6;
+                    selectedAnswer = 7;
                 showcaseAnswers();
             } else if (selectedAnswer != 5 && (gamepad1.dpad_right || gamepad1.dpad_left)) {
                 switch (selectedAnswer) {
@@ -481,12 +504,16 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                         collectStack = !collectStack;
                         break;
                     case 6:
+                        deliverWobble = !deliverWobble;
+                        break;
+                    case 7:
                         if (gamepad1.dpad_right)
                             startDelay++;
                         else
                             startDelay--;
                         if (startDelay < 0)
                             startDelay = 0;
+                        break;
                 }
                 showcaseAnswers();
             } else if (gamepad1.dpad_right) {

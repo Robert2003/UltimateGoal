@@ -95,17 +95,17 @@ public class ConditionalCase4 {
         } else {
             if (goalDetection.getIsFirst()) {
                 shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                        .splineTo(new Vector2d(58, -3), -5.92)
+                        .splineTo(new Vector2d(58, -3), -6.02)
                         .build();
                 wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                        .splineTo(new Vector2d(108.6, 28.7), -5.43)
+                        .splineTo(new Vector2d(112.6, 24.7), -5.43)
                         .build();
                 backTraj = drive.trajectoryBuilder(wobbleTraj.end())
                         .back(10)
                         .build();
                 if (goalDetection.getCollectStack()) {
                     goNextToRingsTraj = drive.trajectoryBuilder(backTraj.end(), true)
-                            .lineToLinearHeading(new Pose2d(56.6, 11, -0.02))
+                            .lineToLinearHeading(new Pose2d(56.6, 14, -0.02))
                             .addTemporalMarker(0.1, () -> {
                                 robot.toggleIntakeServo(true);
                                 robot.dropArm(300);
