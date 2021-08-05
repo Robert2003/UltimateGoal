@@ -27,7 +27,7 @@ public class ConditionalCase0 {
                         .splineTo(new Vector2d(58, 3), 6.02)
                         .build();
                 wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                        .splineTo(new Vector2d(74, -20), 4.712)
+                        .splineTo(new Vector2d(70, -20), 4.712)
                         .build();
                 backTraj = drive.trajectoryBuilder(wobbleTraj.end())
                         .back(10)

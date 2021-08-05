@@ -35,10 +35,10 @@ public class ConditionalCase1 {
                 stackTraj = drive.trajectoryBuilder(backTraj.end(), true)
                         .splineTo(new Vector2d(38.119, -14), 0.275 + 3.14)
                         .build();
-                shootingPositionTraj = drive.trajectoryBuilder(stackTraj.end(), false)
+                shootingPositionTraj2 = drive.trajectoryBuilder(stackTraj.end(), false)
                         .splineTo(new Vector2d(55, -18), 0.01)
                         .build();
-                secondWobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end(), true)
+                secondWobbleTraj = drive.trajectoryBuilder(shootingPositionTraj2.end(), true)
                         .lineToLinearHeading(new Pose2d(40, -21, 3.14))
                         .build();
                 forwardTraj = drive.trajectoryBuilder(secondWobbleTraj.end(), true)
@@ -52,25 +52,25 @@ public class ConditionalCase1 {
                         .splineTo(new Vector2d(58, -3), -6.02)
                         .build();
                 wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                        .splineTo(new Vector2d(95, 23), -4.712)
+                        .splineTo(new Vector2d(95, 3), -4.712)
                         .build();
                 backTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                        .back(10)
+                        .back(3)
                         .build();
                 stackTraj = drive.trajectoryBuilder(backTraj.end(), true)
                         .splineTo(new Vector2d(38.119, 14), -0.275 - 3.14)
                         .build();
-                shootingPositionTraj = drive.trajectoryBuilder(stackTraj.end(), false)
+                shootingPositionTraj2 = drive.trajectoryBuilder(stackTraj.end(), false)
                         .splineTo(new Vector2d(55, 18), -0.01)
                         .build();
-                secondWobbleTraj = drive.trajectoryBuilder(backTraj.end(), true)
-                        .lineToLinearHeading(new Pose2d(38, 35, -3.14))
+                secondWobbleTraj = drive.trajectoryBuilder(shootingPositionTraj2.end(), true)
+                        .lineToLinearHeading(new Pose2d(38, 31, -3.14))
                         .build();
                 forwardTraj = drive.trajectoryBuilder(secondWobbleTraj.end(), true)
                         .forward(12)
                         .build();
                 dropSecondWobble = drive.trajectoryBuilder(forwardTraj.end())
-                        .lineToLinearHeading(new Pose2d(111, 18.5, -4.712))
+                        .lineToLinearHeading(new Pose2d(111, -5.5, -4.712))
                         .build();
             }
         } else {
@@ -115,7 +115,7 @@ public class ConditionalCase1 {
             } else {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, -3), -5.92)
+                            .splineTo(new Vector2d(58, -3), -6.02)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .splineTo(new Vector2d(85.85, 2.508), -5.3733)
@@ -157,6 +157,7 @@ public class ConditionalCase1 {
         robot.init(goalDetection.hardwareMap);
         goalDetection.sleep(goalDetection.getStartDelay());
         if (goalDetection.getDeliverWobble()) {
+            drive = new SampleMecanumDrive(goalDetection.hardwareMap, true);
             robot.toggleFlyWheel(true, 2970);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3);
@@ -178,15 +179,15 @@ public class ConditionalCase1 {
             robot.dropArm(780);
             robot.toggleIntake();
             drive.followTrajectory(secondWobbleTraj);
-            goalDetection.sleep(400);
+            goalDetection.sleep(300);
             drive.followTrajectory(forwardTraj);
-            goalDetection.sleep(800);
+            goalDetection.sleep(400);
             robot.grabWobble();
             drive.followTrajectory(dropSecondWobble);
             robot.dropArm(650);
             robot.dropWobble();
             robot.wobbleServo.setPosition(0.45);
-            goalDetection.sleep(400);
+            goalDetection.sleep(300);
             robot.dropArm(20);
         } else {
 

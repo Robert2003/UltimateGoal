@@ -24,6 +24,7 @@ public class RobotDefinition_ForTeleOP {
 
     public static int GOAL_RPM = 3050; //era 3200, 3100
     public static int POWERSHOTS_RPM = 2800; // era 2800
+    public static int INTERMEDIATE_RPM = 2950;
 
     boolean trigger = false;
 
@@ -117,10 +118,12 @@ public class RobotDefinition_ForTeleOP {
             wobbleServo.setPosition(0.3);
 
         /**FlyWheel*/
-        if (gamepad2.right_bumper && !gamepad2.dpad_up)
+        if (gamepad2.right_bumper && !gamepad2.dpad_up && !gamepad2.dpad_down)
             flyWheel.setVelocity(rpmToTicksPerSecond(GOAL_RPM));
-        else if (gamepad2.right_bumper)
+        else if (gamepad2.right_bumper && !gamepad2.dpad_down)
             flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
+        else if(gamepad2.dpad_down)
+            flyWheel.setVelocity(INTERMEDIATE_RPM);
         else
             flyWheel.setVelocity(10);
     }

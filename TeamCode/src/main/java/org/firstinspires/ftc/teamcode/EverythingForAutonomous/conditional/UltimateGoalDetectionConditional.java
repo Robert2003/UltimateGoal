@@ -106,7 +106,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive() && !finishedAuto) {
-            while (runtime.milliseconds() < 1000) ;
+            while (runtime.milliseconds() < 700) ;
 
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);

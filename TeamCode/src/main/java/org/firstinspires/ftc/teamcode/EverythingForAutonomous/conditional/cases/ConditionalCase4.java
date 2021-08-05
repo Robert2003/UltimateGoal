@@ -89,7 +89,7 @@ public class ConditionalCase4 {
                         .splineTo(new Vector2d(58, -3), -6.02)
                         .build();
                 wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                        .splineTo(new Vector2d(116, 23), -4.712)
+                        .splineTo(new Vector2d(120, 21), -4.712)
                         .addTemporalMarker(0.1, () -> {
                             robot.dropArm(630);
                         })
@@ -98,7 +98,7 @@ public class ConditionalCase4 {
                         .back(10)
                         .build();
                 goNextToRingsTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
-                        .lineToLinearHeading(new Pose2d(56.6, 11, -0.02))
+                        .lineToLinearHeading(new Pose2d(56.6, 14, -0.02))
                         .addTemporalMarker(0.1, () -> {
                             robot.toggleIntakeServo(true);
                             robot.dropArm(300);
@@ -107,13 +107,13 @@ public class ConditionalCase4 {
                         })
                         .build();
                 firstRingTraj = drive.trajectoryBuilder(goNextToRingsTraj.end(), true)
-                        .lineToLinearHeading(new Pose2d(47, 11, -6.2))
+                        .lineToLinearHeading(new Pose2d(47, 14, -6.2))
                         .build();
                 secondRingTraj = drive.trajectoryBuilder(firstRingTraj.end(), true)
-                        .lineToLinearHeading(new Pose2d(37, 11, -6.2))
+                        .lineToLinearHeading(new Pose2d(37, 14, -6.2))
                         .build();
                 thirdRingTraj = drive.trajectoryBuilder(secondRingTraj.end(), true)
-                        .lineToLinearHeading(new Pose2d(32, 11, -6.25))
+                        .lineToLinearHeading(new Pose2d(32, 14, -6.25))
                         .addTemporalMarker(0.1, () -> {
                             robot.toggleFlyWheel(true, 3080);
                         })
@@ -307,11 +307,11 @@ public class ConditionalCase4 {
             drive.followTrajectory(goNextToRingsTraj);
             drive.followTrajectory(firstRingTraj);
             drive.followTrajectory(secondRingTraj);
-            goalDetection.sleep(500);
+            goalDetection.sleep(300);
             robot.shootrings(2);
             drive.followTrajectory(thirdRingTraj);
             drive.followTrajectory(fourthRingTraj);
-            goalDetection.sleep(500);
+            goalDetection.sleep(400);
             robot.shootrings(3);
             drive.followTrajectory(secondWobbleTraj);
             drive.followTrajectory(forwardTraj);
