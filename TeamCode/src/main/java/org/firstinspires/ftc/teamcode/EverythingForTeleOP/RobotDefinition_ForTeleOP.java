@@ -114,17 +114,20 @@ public class RobotDefinition_ForTeleOP {
             wobbleServo.setPosition(0.53);
         if (gamepad2.dpad_right)
             wobbleServo.setPosition(0);
-        if (gamepad2.dpad_down)
+        /*if (gamepad2.dpad_down)
             wobbleServo.setPosition(0.3);
 
+         */
+
         /**FlyWheel*/
-        if (gamepad2.right_bumper && !gamepad2.dpad_up && !gamepad2.dpad_down)
-            flyWheel.setVelocity(rpmToTicksPerSecond(GOAL_RPM));
-        else if (gamepad2.right_bumper && !gamepad2.dpad_down)
-            flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
-        else if(gamepad2.dpad_down)
-            flyWheel.setVelocity(INTERMEDIATE_RPM);
-        else
+        if (gamepad2.right_bumper) {
+            if (gamepad2.dpad_up)
+                flyWheel.setVelocity(rpmToTicksPerSecond(POWERSHOTS_RPM));
+            else if (gamepad2.dpad_down)
+                flyWheel.setVelocity(rpmToTicksPerSecond(INTERMEDIATE_RPM));
+            else
+                flyWheel.setVelocity(rpmToTicksPerSecond(GOAL_RPM));
+        } else
             flyWheel.setVelocity(10);
     }
 

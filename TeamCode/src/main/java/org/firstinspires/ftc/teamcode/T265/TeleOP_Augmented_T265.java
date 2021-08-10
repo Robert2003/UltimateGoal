@@ -82,7 +82,7 @@ public class TeleOP_Augmented_T265 extends LinearOpMode {
     double second_surpress = 1;
 
     private static T265Camera slamra = null;
-    com.arcrobotics.ftclib.geometry.Pose2d startingPose = new com.arcrobotics.ftclib.geometry.Pose2d(0, 0, new Rotation2d(0));
+    com.arcrobotics.ftclib.geometry.Pose2d startingPose = new com.arcrobotics.ftclib.geometry.Pose2d(1, 1, new Rotation2d(0));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -101,9 +101,7 @@ public class TeleOP_Augmented_T265 extends LinearOpMode {
 
 
 
-        if (slamra == null) {
-            slamra = new T265Camera(new Transform2d(), 0.1, hardwareMap.appContext);
-        }
+        slamra = new T265Camera(new Transform2d(), 0.1, hardwareMap.appContext);
 
         slamra.stop();
         slamra.setPose(startingPose);
@@ -111,6 +109,7 @@ public class TeleOP_Augmented_T265 extends LinearOpMode {
         waitForStart();
 
         slamra.start();
+        slamra.setPose(startingPose);
 
         if (isStopRequested()) return;
 
@@ -142,7 +141,11 @@ public class TeleOP_Augmented_T265 extends LinearOpMode {
             Pose2d poseEstimate = drive.getPoseEstimate();
 
             Pose2d RobotPosition = new Pose2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254, rotation.getRadians());
-            Pair<Double, Double> Position = MathFunctions.RobotPosition(RobotPosition.vec(), Constants.RedTowerPose);
+            Pair<Double, Double> Position = MathFunctions.RobotPosition(RobotPosition.vec(), Constants.RedTowerPoseLefttLine);
+
+            if(gamepad1.b)
+                slamra.setPose(startingPose);
+
 
             // Print pose to telemetry
             telemetry.addData("mode", currentMode);
@@ -154,8 +157,8 @@ public class TeleOP_Augmented_T265 extends LinearOpMode {
             telemetry.addData("T265 Y", up.pose.getTranslation().getY() / 0.0254);
             telemetry.addData("T265 Heading", up.pose.getRotation());
             telemetry.addData(" ", " ");
-            telemetry.addData("Distance", Position.first);
-            telemetry.addData("Angle", Angle.normDelta(Position.second - poseEstimate.getHeading()));
+            telemetry.addData("Angle1", Math.toDegrees(Position.first));
+            telemetry.addData("Angle2", Math.toDegrees(Position.second));
             telemetry.update();
 
             SupressButtons();
