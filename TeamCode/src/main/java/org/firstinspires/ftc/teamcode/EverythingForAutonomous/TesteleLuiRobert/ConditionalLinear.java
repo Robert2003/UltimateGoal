@@ -255,7 +255,7 @@ public class ConditionalLinear extends LinearOpMode
         telemetry.addData("A4", "Se parcheaza: " + (park == Park.PARK ? "DA" : "NU") + (selectedAnswer == 4 ? " [X]" : ""));
         telemetry.addData("A5", "Robotul sta pe loc " + startDelay + " secunde inainte sa plece" + (selectedAnswer == 5 ? " [X]" : ""));
         telemetry.addData("A6", "Robotul se parcheaza in ultimele " + secondsToPark + " secunde" + (selectedAnswer == 6 ? " [X]" : ""));
-        telemetry.addLine("Apasa Y pentru a confirma selectia.");
+        telemetry.addLine("Apasa B pentru a confirma selectia.");
         telemetry.update();
     }
 
@@ -266,7 +266,7 @@ public class ConditionalLinear extends LinearOpMode
 
         while (modifyingAnswers && !isStopRequested())
         {
-            if (gamepad1.y)
+            if (gamepad1.b)
             {
                 modifyingAnswers = false;
                 telemetry.addLine("Gata de lansare frate!");

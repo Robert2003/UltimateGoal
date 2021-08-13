@@ -204,19 +204,18 @@ public class ConditionalCase4 {
 
                 } else {
                     toTheWallTraj = drive.trajectoryBuilder(new Pose2d())
-                            .lineTo(new Vector2d(0, -7))
+                            .lineTo(new Vector2d(0, -3))
                             .build();
-                    wobbleTraj = drive.trajectoryBuilder(toTheWallTraj.end())
-                            .lineTo(new Vector2d(102, -7))
+                    shootingPositionTraj = drive.trajectoryBuilder(toTheWallTraj.end())
+                            .lineToLinearHeading(new Pose2d(56.5, -3, 0.2))
                             .build();
-                    shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                            .lineToLinearHeading(new Pose2d(56.5, -5., 0.31))
+                    wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                            .lineToLinearHeading(new Pose2d(102, 8, -1.2))
                             .build();
                     if (goalDetection.getPark())
-                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                                .lineTo(new Vector2d(68, -6.5))
+                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                                .lineTo(new Vector2d(68, 5))
                                 .build();
-
                 }
             } else {
                 if (goalDetection.getIsFirst()) {
@@ -278,7 +277,7 @@ public class ConditionalCase4 {
                             .lineTo(new Vector2d(0, 7))
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(toTheWallTraj.end())
-                            .lineToLinearHeading(new Pose2d(102, 7, -0.25))
+                            .lineToLinearHeading(new Pose2d(104, 7, -0.25))
                             .build();
                     shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(56.5, 5., -0.15))
@@ -349,16 +348,16 @@ public class ConditionalCase4 {
                 }
             } else if (!goalDetection.getIsFirst()) {
                 drive.followTrajectory(toTheWallTraj);
+                robot.toggleFlyWheel(true, 2950);
+                drive.followTrajectory(shootingPositionTraj);
+                robot.shootrings(3, 1000);
+                robot.toggleFlyWheel(false);
                 drive.followTrajectory(wobbleTraj);
                 robot.dropArm(670);
                 goalDetection.sleep(1000);
                 robot.dropWobble();
-                robot.toggleFlyWheel(true, 2970);
-                drive.followTrajectory(shootingPositionTraj);
                 robot.wobbleServo.setPosition(0.45);
                 robot.dropArm(20);
-                robot.shootrings(3, 1000);
-                robot.toggleFlyWheel(false);
                 if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
             }
         }

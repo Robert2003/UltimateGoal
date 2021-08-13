@@ -58,7 +58,7 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
 
     //public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
-    boolean isRed = true, isFirst= true, deliverWobble, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
+    boolean isRed = true, isFirst = true, deliverWobble, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
     int selectedCase, startDelay = 0;
     //delays
     //int collectStackDelay, parkDelay, shootDelay;
@@ -105,22 +105,26 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while (opModeIsActive() && !finishedAuto) {
-            while (runtime.milliseconds() < 700) ;
+        while (runtime.milliseconds() < 700 && opModeIsActive());
 
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.addData("Position", pipeline.position);
-            telemetry.update();
+        webCam.stopStreaming();
+        webCam.closeCameraDevice();
 
-            SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
 
-            if (selectedCase == 0) lastPosition = SkystoneDeterminationPipeline.RingPosition.NONE;
-            else if (selectedCase == 1)
-                lastPosition = SkystoneDeterminationPipeline.RingPosition.ONE;
-            else if (selectedCase == 4)
-                lastPosition = SkystoneDeterminationPipeline.RingPosition.FOUR;
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.position);
+        telemetry.update();
 
-            startDelay *= 1000;
+        SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
+
+        if (selectedCase == 0) lastPosition = SkystoneDeterminationPipeline.RingPosition.NONE;
+        else if (selectedCase == 1)
+            lastPosition = SkystoneDeterminationPipeline.RingPosition.ONE;
+        else if (selectedCase == 4)
+            lastPosition = SkystoneDeterminationPipeline.RingPosition.FOUR;
+
+        startDelay *= 1000;
+        while(opModeIsActive() && !isStopRequested() && !finishedAuto) {
             switch (lastPosition) {
                 case NONE:
                     conditionalCase0.runCase();
@@ -135,11 +139,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
                     finishedAuto = true;
                     break;
             }
-            // Don't burn CPU cycles busy-looping in this sample
-            //sleep(50);
-
-
         }
+        // Don't burn CPU cycles busy-looping in this sample
+        //sleep(50);
+
     }
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline {
@@ -155,21 +158,21 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         Point region1_pointA;
         Point region1_pointB;
 
-        public SkystoneDeterminationPipeline(UltimateGoalDetectionConditional cond){
+        public SkystoneDeterminationPipeline(UltimateGoalDetectionConditional cond) {
             boolean isRed = cond.getIsRed();
             boolean isFirst = cond.getIsFirst();
-            if(isRed) {
+            if (isRed) {
                 if (isFirst) {
                     cond.telemetry.addData("C", "red first");
-                } else{
+                } else {
                     REGION1_TOPLEFT_ANCHOR_POINT = REGION2_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "red second");
                 }
-            } else{
+            } else {
                 if (isFirst) {
                     REGION1_TOPLEFT_ANCHOR_POINT = REGION3_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "blue first");
-                } else{
+                } else {
                     REGION1_TOPLEFT_ANCHOR_POINT = REGION4_TOPLEFT_ANCHOR_POINT;
                     cond.telemetry.addData("C", "blue second");
                 }
@@ -205,7 +208,6 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
 
         final int FOUR_RING_THRESHOLD = 149;
         final int ONE_RING_THRESHOLD = 136;
-
 
 
         /*
@@ -297,7 +299,9 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         return collectStack;
     }
 
-    public boolean getDeliverWobble(){ return deliverWobble; }
+    public boolean getDeliverWobble() {
+        return deliverWobble;
+    }
 
     public int getStartDelay() {
         return startDelay;

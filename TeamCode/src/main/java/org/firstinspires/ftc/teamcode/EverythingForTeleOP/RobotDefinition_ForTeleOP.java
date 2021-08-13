@@ -22,9 +22,9 @@ public class RobotDefinition_ForTeleOP {
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    public static int GOAL_RPM = 3050; //era 3200, 3100
-    public static int POWERSHOTS_RPM = 2800; // era 2800
-    public static int INTERMEDIATE_RPM = 2950;
+    public static int GOAL_RPM = 3000; //era 3200, 3100
+    public static int POWERSHOTS_RPM = 2750; // era 2800
+    public static int INTERMEDIATE_RPM = 2900;
 
     boolean trigger = false;
 

@@ -30,7 +30,7 @@ public class CameraAdjusting extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
+        pipeline = new SkystoneDeterminationPipeline(this);
         webCam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
@@ -68,7 +68,10 @@ public class CameraAdjusting extends LinearOpMode {
         Point region4_pointA;
         Point region4_pointB;
 
-        public SkystoneDeterminationPipeline() {
+        CameraAdjusting cameraAdjusting;
+
+        public SkystoneDeterminationPipeline(CameraAdjusting cameraAd) {
+            cameraAdjusting = cameraAd;
             REGION1_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
                     SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT;
             REGION2_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
@@ -191,6 +194,8 @@ public class CameraAdjusting extends LinearOpMode {
                     region1_pointB, // Second point which defines the rectangle
                     RED, // The color the rectangle is drawn in
                     2); // Negative thickness means solid fill
+            cameraAdjusting.telemetry.addData("d1", "Drew RED");
+            cameraAdjusting.telemetry.update();
             Imgproc.rectangle(
                     input, // Buffer to draw on
                     region2_pointA, // First point which defines the rectangle
@@ -209,7 +214,6 @@ public class CameraAdjusting extends LinearOpMode {
                     region4_pointB, // Second point which defines the rectangle
                     LIGHT_BLUE, // The color the rectangle is drawn in
                     2); // Negative thickness means solid fill
-
             return input;
         }
 
