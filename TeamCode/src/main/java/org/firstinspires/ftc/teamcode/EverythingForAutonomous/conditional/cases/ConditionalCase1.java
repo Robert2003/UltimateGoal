@@ -80,7 +80,7 @@ public class ConditionalCase1 {
                             .splineTo(new Vector2d(58, 3), 6.02)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                            .splineTo(new Vector2d(98, 9.6), -1.57)
+                            .lineToLinearHeading(new Pose2d(92, 9.6, -1.57))
                             .build();
                     strafeTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(40, 9.6, 1.57))
