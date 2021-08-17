@@ -18,6 +18,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.util.Arrays;
+
 @Config
 @Autonomous
 public class CameraAdjusting extends LinearOpMode {
@@ -45,6 +47,13 @@ public class CameraAdjusting extends LinearOpMode {
         while(!isStopRequested()){
             sleep(1500);
             telemetry.addData("Disks", pipeline.position);
+            telemetry.addData("Analysis", pipeline.getAnalysis());
+            telemetry.addData("Position", pipeline.position);
+            telemetry.addData("Checking", pipeline.getSelectedSquare());
+            if(gamepad1.dpad_down){
+                pipeline.loopNextSquare();
+                sleep(1000);
+            }
             telemetry.update();
         }
         waitForStart();
@@ -134,8 +143,8 @@ public class CameraAdjusting extends LinearOpMode {
         static final float REGION_WIDTH = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.REGION_WIDTH;
         static final float REGION_HEIGHT = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.REGION_HEIGHT;
 
-        final int FOUR_RING_THRESHOLD = 149;
-        final int ONE_RING_THRESHOLD = 136;
+        final int FOUR_RING_THRESHOLD = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.FOUR_RING_THRESHOLD;//149;
+        final int ONE_RING_THRESHOLD = UltimateGoalDetectionConditional.SkystoneDeterminationPipeline.ONE_RING_THRESHOLD;//136;
 
 
         /*
@@ -194,8 +203,6 @@ public class CameraAdjusting extends LinearOpMode {
                     region1_pointB, // Second point which defines the rectangle
                     RED, // The color the rectangle is drawn in
                     2); // Negative thickness means solid fill
-            cameraAdjusting.telemetry.addData("d1", "Drew RED");
-            cameraAdjusting.telemetry.update();
             Imgproc.rectangle(
                     input, // Buffer to draw on
                     region2_pointA, // First point which defines the rectangle
@@ -220,6 +227,44 @@ public class CameraAdjusting extends LinearOpMode {
         public int getAnalysis() {
             return avg1;
         }
+
+        int selectedSquare = 0;
+
+        public void loopNextSquare(){
+            selectedSquare++;
+            if(selectedSquare == SQUARE.values().length)
+                selectedSquare = 0;
+            switch (selectedSquare){
+                case 0:
+                    region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+                    break;
+                case 1:
+                    region1_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
+                    break;
+                case 2:
+                    region1_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
+                    break;
+                case 3:
+                    region1_Cb = Cb.submat(new Rect(region4_pointA, region4_pointB));
+                    break;
+            }
+        }
+
+        enum SQUARE{
+            RED,
+            LIGHT_RED,
+            BLUE,
+            LIGHT_BLUE
+        }
+
+        public int getSelectedSquare() {
+            return selectedSquare;
+        }
+
+        public void setSelectedSquare(int selectedSquare) {
+            this.selectedSquare = selectedSquare;
+        }
+
     }
 
 }

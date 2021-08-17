@@ -395,7 +395,7 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
 
-        final int FOUR_RING_THRESHOLD = 149;
+        final int FOUR_RING_THRESHOLD = 145;
         final int ONE_RING_THRESHOLD = 136;
 
         Point region1_pointA = new Point(

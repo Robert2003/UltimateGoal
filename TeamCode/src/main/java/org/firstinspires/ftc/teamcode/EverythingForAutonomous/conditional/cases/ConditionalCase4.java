@@ -320,7 +320,7 @@ public class ConditionalCase4 {
             drive.followTrajectory(parkTraj);
         } else {
             if (goalDetection.getIsFirst()) {
-                robot.toggleFlyWheel(true, 2970);
+                robot.toggleFlyWheel(true, 2920);
                 drive.followTrajectory(shootingPositionTraj);
                 robot.shootrings(3);
                 robot.toggleFlyWheel(false);
