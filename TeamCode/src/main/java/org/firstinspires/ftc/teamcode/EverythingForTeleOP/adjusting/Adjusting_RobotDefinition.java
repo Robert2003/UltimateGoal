@@ -17,7 +17,7 @@ public class Adjusting_RobotDefinition extends RobotDefinition_ForTeleOP {
 
     @Override
     public void Gamepad2Actions(Gamepad gamepad2, double x, double y) {
-        /**intake*/
+        /*intake*/
         if (gamepad2.y) {
             intake1.setPower(1);
             intake2.setPower(1);
@@ -32,7 +32,7 @@ public class Adjusting_RobotDefinition extends RobotDefinition_ForTeleOP {
             flyWheelRPM += addition;
         else if (gamepad2.dpad_left)
             flyWheelRPM -= addition;
-        /**FlyWheel*/
+        /*FlyWheel*/
         if (gamepad2.right_bumper)
             flyWheel.setVelocity(rpmToTicksPerSecond(flyWheelRPM));
         else
