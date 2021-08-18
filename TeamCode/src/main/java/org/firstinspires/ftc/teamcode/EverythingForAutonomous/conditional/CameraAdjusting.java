@@ -49,10 +49,12 @@ public class CameraAdjusting extends LinearOpMode {
             telemetry.addData("Disks", pipeline.position);
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
-            telemetry.addData("Checking", pipeline.getSelectedSquare());
+            telemetry.addData("Threshold", pipeline.ONE_RING_THRESHOLD + "/" + pipeline.FOUR_RING_THRESHOLD);
+            telemetry.addData("Checking", Arrays.asList(SkystoneDeterminationPipeline.
+                    SQUARE.values()).get(pipeline.getSelectedSquare()));
             if(gamepad1.dpad_down){
                 pipeline.loopNextSquare();
-                sleep(1000);
+                sleep(200);
             }
             telemetry.update();
         }
@@ -250,7 +252,7 @@ public class CameraAdjusting extends LinearOpMode {
             }
         }
 
-        enum SQUARE{
+        public enum SQUARE{
             RED,
             LIGHT_RED,
             BLUE,

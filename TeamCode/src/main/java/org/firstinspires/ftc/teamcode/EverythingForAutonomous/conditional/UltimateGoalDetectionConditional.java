@@ -206,8 +206,8 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
         public static final float REGION_WIDTH = 35 * 2.5f;
         public static final float REGION_HEIGHT = 25 * 2.5f;
 
-        static final int FOUR_RING_THRESHOLD = 149;
-        static final int ONE_RING_THRESHOLD = 122;
+        static final int FOUR_RING_THRESHOLD = 140;
+        static final int ONE_RING_THRESHOLD = 124;
 
 
         /*

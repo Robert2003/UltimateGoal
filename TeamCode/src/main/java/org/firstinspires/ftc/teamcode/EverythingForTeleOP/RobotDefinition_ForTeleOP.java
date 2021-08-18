@@ -24,7 +24,7 @@ public class RobotDefinition_ForTeleOP {
 
     public static int GOAL_RPM = 3000; //era 3200, 3100
     public static int POWERSHOTS_RPM = 2750; // era 2800
-    public static int INTERMEDIATE_RPM = 2900;
+    public static int INTERMEDIATE_RPM = 2940;
 
     boolean trigger = false;
 

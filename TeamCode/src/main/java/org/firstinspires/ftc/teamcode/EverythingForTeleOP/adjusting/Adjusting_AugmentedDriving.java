@@ -47,12 +47,12 @@ public class Adjusting_AugmentedDriving extends LinearOpMode {
             Pose2d poseEstimate = drive.getPoseEstimate();
 
             /// Print pose to telemetry
-            telemetry.addData("mode", currentMode);
+            /*telemetry.addData("mode", currentMode);
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.addData("arm", robot.wobbleArm.getCurrentPosition());
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
-            telemetry.update();
+            telemetry.update();*/
 
             if(gamepad1.dpad_up)
                 robot.intakeServo.setPosition(1);

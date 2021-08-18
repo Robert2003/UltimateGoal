@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.EverythingForTeleOP.RobotDefinition_ForTel
 public class Adjusting_RobotDefinition extends RobotDefinition_ForTeleOP {
 
     int flyWheelRPM, addition = 5;
+    boolean confirmChage = true;
     Adjusting_AugmentedDriving driving;
 
     public Adjusting_RobotDefinition(Adjusting_AugmentedDriving driving) {
@@ -28,16 +29,23 @@ public class Adjusting_RobotDefinition extends RobotDefinition_ForTeleOP {
             intake1.setPower(0);
             intake2.setPower(0);
         }
-        if (gamepad2.dpad_right)
+        if (gamepad2.dpad_right && confirmChage) {
             flyWheelRPM += addition;
-        else if (gamepad2.dpad_left)
+            confirmChage = false;
+        }
+        else if (gamepad2.dpad_left && confirmChage) {
             flyWheelRPM -= addition;
+            confirmChage = false;
+        }
+        if(!confirmChage && gamepad2.b)
+            confirmChage = true;
         /*FlyWheel*/
         if (gamepad2.right_bumper)
             flyWheel.setVelocity(rpmToTicksPerSecond(flyWheelRPM));
         else
             flyWheel.setVelocity(10);
         driving.telemetry.addData("Flywheel RPM", flyWheelRPM);
+        driving.telemetry.addData("Confirmed", ((confirmChage = true) ? "Yes" : "No"));
         driving.telemetry.update();
     }
 
