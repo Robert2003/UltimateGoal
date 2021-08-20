@@ -318,6 +318,7 @@ public class ConditionalCase4 {
             drive.followTrajectory(dropSecondWobble);
             robot.dropWobble();
             drive.followTrajectory(parkTraj);
+            robot.toggleIntakeServo(false);
         } else {
             if (goalDetection.getIsFirst()) {
                 robot.toggleFlyWheel(true, 2920);
@@ -339,6 +340,7 @@ public class ConditionalCase4 {
                     drive.followTrajectory(fourthRingTraj);
                     goalDetection.sleep(500);
                     robot.shootrings(3);
+                    robot.toggleIntakeServo(false);
                 }
                 if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
                 else {

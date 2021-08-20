@@ -80,7 +80,7 @@ public class ConditionalCase1 {
                             .splineTo(new Vector2d(58, 3), 6.02)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                            .lineToLinearHeading(new Pose2d(92, 9.6, -1.57))
+                            .lineToLinearHeading(new Pose2d(92, 9.6, -1.5))
                             .build();
                     strafeTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(40, 9.6, 1.57))
@@ -177,6 +177,7 @@ public class ConditionalCase1 {
             robot.dropArm(300);
             robot.toggleFlyWheel(true, 2970);
             robot.toggleIntake();
+            robot.toggleIntakeServo(true);
             drive.followTrajectory(stackTraj);
             drive.followTrajectory(shootingPositionTraj2);
             goalDetection.sleep(500);
@@ -195,6 +196,7 @@ public class ConditionalCase1 {
             robot.wobbleServo.setPosition(0.45);
             goalDetection.sleep(300);
             robot.dropArm(20);
+            robot.toggleIntakeServo(false);
         } else {
             if (goalDetection.getIsFirst()) {
                 robot.toggleFlyWheel(true, goalDetection.getIsRed() ? 2970 : 2950);
@@ -210,6 +212,7 @@ public class ConditionalCase1 {
                 goalDetection.sleep(400);
                 if (goalDetection.getIsRed()) drive.followTrajectory(strafeTraj);
                 if (goalDetection.getCollectStack()) {
+                    robot.toggleIntakeServo(true);
                     robot.toggleFlyWheel(true, goalDetection.getIsFirst() ? 2950 : 2930);
                     robot.toggleIntake();
                     drive.followTrajectory(stackTraj);
@@ -218,6 +221,7 @@ public class ConditionalCase1 {
                     robot.shootrings(3);
                     goalDetection.sleep(500);
                     robot.toggleFlyWheel(false);
+                    robot.toggleIntakeServo(false);
                 }
                 if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
             } else {
