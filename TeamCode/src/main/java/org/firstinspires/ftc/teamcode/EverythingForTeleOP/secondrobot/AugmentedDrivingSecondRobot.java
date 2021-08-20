@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.EverythingForTeleOP;
+package org.firstinspires.ftc.teamcode.EverythingForTeleOP.secondrobot;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.EverythingForTeleOP.RobotDefinition_ForTeleOP;
+import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.FromRoadRunner.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.FromRoadRunner.advanced.SampleMecanumDriveCancelable;
 
@@ -27,7 +29,7 @@ public class AugmentedDrivingSecondRobot extends LinearOpMode {
 
     Mode currentMode = Mode.DRIVER_CONTROL;
 
-    RobotDefinition_ForTeleOP robot = new RobotDefinition_ForTeleOP();
+    RobotDefinition_SecondRobot robot = new RobotDefinition_SecondRobot();
     private ElapsedTime runtime = new ElapsedTime();
 
     boolean supress2 = false, buttonPressed = false;
