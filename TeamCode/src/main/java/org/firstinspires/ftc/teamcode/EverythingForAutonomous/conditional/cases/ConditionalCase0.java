@@ -21,8 +21,8 @@ public class ConditionalCase0 {
         drive = goalDetection.getDrive();
         robot = new RobotDefinition_ForAuto();
 
-        if(goalDetection.getDeliverWobble())  {
-            if(goalDetection.getIsRed()) {
+        if (goalDetection.getDeliverWobble()) {
+            if (goalDetection.getIsRed()) {
                 shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
                         .splineTo(new Vector2d(58, 3), 6.02)
                         .build();
@@ -144,7 +144,7 @@ public class ConditionalCase0 {
         robot.init(goalDetection.hardwareMap);
         goalDetection.sleep(goalDetection.getStartDelay());
         goalDetection.telemetry.update();
-        if(goalDetection.getDeliverWobble()) {
+        if (goalDetection.getDeliverWobble()) {
             robot.toggleFlyWheel(true, 2970);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3);

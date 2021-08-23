@@ -108,11 +108,21 @@ public class ConditionalCase1 {
                     shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(56.5, -5, 0.27))
                             .build();
-                    if (goalDetection.getPark()) {
-                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                    if (goalDetection.getPark() && goalDetection.getCollectStack()) {
+                        stackTraj = drive.trajectoryBuilder(shootingPositionTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(40, 16.7, 5.5))
+                                .build();
+                        shootingPositionTraj2 = drive.trajectoryBuilder(stackTraj.end())
+                                .lineToLinearHeading(new Pose2d(56.5, -5, 0.27))
+                                .build();
+                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj2.end())
                                 .lineTo(new Vector2d(73, 6.5))
                                 .build();
                     }
+                    else if(goalDetection.getPark())
+                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                                .lineTo(new Vector2d(73, 6.5))
+                                .build();
                 }
 
             } else {
@@ -149,11 +159,21 @@ public class ConditionalCase1 {
                     shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(56.5, 5., -0.26))
                             .build();
-                    if (goalDetection.getPark()) {
-                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                    if (goalDetection.getPark() && goalDetection.getCollectStack()) {
+                        stackTraj = drive.trajectoryBuilder(shootingPositionTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(40, -16.7, -5.5))
+                                .build();
+                        shootingPositionTraj2 = drive.trajectoryBuilder(stackTraj.end())
+                                .lineToLinearHeading(new Pose2d(56.5, 5, -0.27))
+                                .build();
+                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj2.end())
                                 .lineTo(new Vector2d(73, 6.5))
                                 .build();
                     }
+                    else if(goalDetection.getPark())
+                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                                .lineTo(new Vector2d(73, 6.5))
+                                .build();
                 }
             }
         }
@@ -235,7 +255,15 @@ public class ConditionalCase1 {
                 robot.dropArm(20);
                 goalDetection.sleep(500);
                 robot.shootrings(3, 1000);
-                robot.toggleFlyWheel(false);
+                robot.toggleIntake();
+                if(goalDetection.getCollectStack())
+                {
+                    drive.followTrajectory(stackTraj);
+                    drive.followTrajectory(shootingPositionTraj2);
+                    robot.shootrings(3, 500);
+                    robot.toggleIntake();
+                    robot.toggleFlyWheel(false);
+                }
                 if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
             }
         }

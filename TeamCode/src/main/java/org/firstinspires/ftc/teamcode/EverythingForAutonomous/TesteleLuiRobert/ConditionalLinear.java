@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.EverythingForAutonomous.TesteleLuiRobert;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -56,7 +57,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import static org.firstinspires.ftc.teamcode.Utils.Constants.*;
 
 @TeleOp(name = "Robert Conditional", group = "Linear Opmode")
-//@Disabled
+@Disabled
 public class ConditionalLinear extends LinearOpMode
 {
     boolean waitingAnswer = false;

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,6 +19,7 @@ import org.opencv.core.Scalar;
 
 @Config
 @Autonomous(name = "FTCLib_Detection", group = "Autonomous")
+@Disabled
 public class FTCLib_Detection extends LinearOpMode {
     public static double lowerThresholdCr = 120;
     public static double UpperThresholdCr = 230;

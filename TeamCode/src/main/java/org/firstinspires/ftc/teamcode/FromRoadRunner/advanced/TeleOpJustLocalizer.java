@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.FromRoadRunner.StandardTrackingWheelLocali
  * packaged localizer tools.
  */
 @TeleOp(group = "advanced")
+@Disabled
 public class TeleOpJustLocalizer extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -146,7 +146,8 @@ public class ConditionalCase4 {
                         })
                         .build();
             }
-        } else {
+        }
+        else {
             if (goalDetection.getIsRed()) {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
@@ -212,10 +213,48 @@ public class ConditionalCase4 {
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .lineToLinearHeading(new Pose2d(102, 8, -1.2))
                             .build();
-                    if (goalDetection.getPark())
-                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                                .lineTo(new Vector2d(68, 5))
+                    if (goalDetection.getCollectStack()) {
+                        goNextToRingsTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(56.6, 22, -0.02))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.toggleIntakeServo(true);
+                                    robot.toggleIntake();
+                                    robot.toggleFlyWheel(true, 2960);
+                                })
                                 .build();
+                        firstRingTraj = drive.trajectoryBuilder(goNextToRingsTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(47, 22, -0.02))
+                                .build();
+                        secondRingTraj = drive.trajectoryBuilder(firstRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(39, 22, -0.02))
+                                .build();
+                        thirdRingTraj = drive.trajectoryBuilder(secondRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(34.5, 22, -0.02))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.toggleFlyWheel(true, 3000);
+                                })
+                                .build();
+                        fourthRingTraj = drive.trajectoryBuilder(thirdRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(20, 22, -0.02))
+                                .build();
+                    }
+                    if (goalDetection.getPark() && goalDetection.getCollectStack()) {
+                        parkTraj = drive.trajectoryBuilder(fourthRingTraj.end())
+                                .lineTo(new Vector2d(72, -11))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.wobbleServo.setPosition(0.45);
+                                    robot.dropArm(20);
+                                })
+                                .build();
+                    } else if (goalDetection.getPark()) {
+                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                                .lineTo(new Vector2d(72, -11))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.wobbleServo.setPosition(0.45);
+                                    robot.dropArm(20);
+                                })
+                                .build();
+                    }
                 }
             } else {
                 if (goalDetection.getIsFirst()) {
@@ -282,11 +321,49 @@ public class ConditionalCase4 {
                     shootingPositionTraj = drive.trajectoryBuilder(wobbleTraj.end())
                             .lineToLinearHeading(new Pose2d(56.5, 0, -0.14))
                             .build();
-                    if (goalDetection.getPark())
+                    if (goalDetection.getCollectStack()) {
+                        goNextToRingsTraj = drive.trajectoryBuilder(shootingPositionTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(56.6, -22, 0.02))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.toggleIntakeServo(true);
+                                    robot.dropArm(300);
+                                    robot.toggleIntake();
+                                    robot.toggleFlyWheel(true, 2970);
+                                })
+                                .build();
+                        firstRingTraj = drive.trajectoryBuilder(goNextToRingsTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(47, -22, 6.25))
+                                .build();
+                        secondRingTraj = drive.trajectoryBuilder(firstRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(39, -22, 6.25))
+                                .build();
+                        thirdRingTraj = drive.trajectoryBuilder(secondRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(34.5, -22, 6.25))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.toggleFlyWheel(true, 3000);
+                                })
+                                .build();
+                        fourthRingTraj = drive.trajectoryBuilder(thirdRingTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(20, -22, 6.25))
+                                .build();
+                    }
+                    if (goalDetection.getPark() && goalDetection.getCollectStack()) {
+                        parkTraj = drive.trajectoryBuilder(fourthRingTraj.end())
+                                .lineTo(new Vector2d(68, 0))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.wobbleServo.setPosition(0.45);
+                                    robot.dropArm(20);
+                                })
+                                .build();
+                    } else if (goalDetection.getPark()) {
                         parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                                 .lineTo(new Vector2d(68, 0))
+                                .addTemporalMarker(0.1, () -> {
+                                    robot.wobbleServo.setPosition(0.45);
+                                    robot.dropArm(20);
+                                })
                                 .build();
-
+                    }
                 }
             }
         }
@@ -349,10 +426,12 @@ public class ConditionalCase4 {
                     robot.dropArm(20);
                 }
             } else if (!goalDetection.getIsFirst()) {
+                drive = new SampleMecanumDrive(goalDetection.hardwareMap, true);
+                goalDetection.sleep(1000);
                 drive.followTrajectory(toTheWallTraj);
                 robot.toggleFlyWheel(true, 2950);
                 drive.followTrajectory(shootingPositionTraj);
-                robot.shootrings(3, 1000);
+                robot.shootrings(3, 600);
                 robot.toggleFlyWheel(false);
                 drive.followTrajectory(wobbleTraj);
                 robot.dropArm(670);
@@ -360,7 +439,24 @@ public class ConditionalCase4 {
                 robot.dropWobble();
                 robot.wobbleServo.setPosition(0.45);
                 robot.dropArm(20);
+                if (goalDetection.getCollectStack()) {
+                    drive.followTrajectory(goNextToRingsTraj);
+                    drive.followTrajectory(firstRingTraj);
+                    drive.followTrajectory(secondRingTraj);
+                    goalDetection.sleep(300);
+                    robot.shootrings(3);
+                    drive.followTrajectory(thirdRingTraj);
+                    drive.followTrajectory(fourthRingTraj);
+                    goalDetection.sleep(300);
+                    robot.shootrings(3);
+                    robot.toggleIntakeServo(false);
+                }
                 if (goalDetection.getPark()) drive.followTrajectory(parkTraj);
+                else {
+                    robot.wobbleServo.setPosition(0.45);
+                    goalDetection.sleep(400);
+                    robot.dropArm(20);
+                }
             }
         }
     }

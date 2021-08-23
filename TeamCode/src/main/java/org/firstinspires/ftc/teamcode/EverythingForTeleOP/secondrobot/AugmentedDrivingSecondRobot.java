@@ -20,6 +20,7 @@ import static java.lang.Math.tan;
 import static java.lang.Math.toRadians;
 
 @TeleOp(group = "advanced")
+@Disabled
 public class AugmentedDrivingSecondRobot extends LinearOpMode {
     enum Mode {
         DRIVER_CONTROL,
