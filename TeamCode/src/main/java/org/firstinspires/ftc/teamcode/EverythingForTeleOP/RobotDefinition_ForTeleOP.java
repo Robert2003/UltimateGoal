@@ -73,7 +73,11 @@ public class RobotDefinition_ForTeleOP {
         if (gamepad2.left_trigger != 0) {
             trigger = true;
             wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            wobbleArm.setPower(-0.5);
+            wobbleArm.setPower(gamepad2.left_trigger * -0.4); //-0.5
+        } else if (gamepad2.right_trigger != 0) {
+            trigger = true;
+            wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            wobbleArm.setPower(gamepad2.right_trigger * 0.4);
         } else if (trigger) {
             trigger = false;
             wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
