@@ -103,7 +103,7 @@ public class ConditionalCase0 {
             } else {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, -3), -5.92)
+                            .splineTo(new Vector2d(58, -3), -5.7)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .splineTo(new Vector2d(94, 25), -3.844) // 74, -20 4.712
@@ -128,7 +128,7 @@ public class ConditionalCase0 {
                             .lineToLinearHeading(new Pose2d(36.5, 4.3, 0))
                             .build();
                     left = drive.trajectoryBuilder(waitForOthersTraj.end())
-                            .lineToLinearHeading(new Pose2d(33, -15, 0.05))
+                            .lineToLinearHeading(new Pose2d(33, -15, 0))
                             .build();
                     if (goalDetection.getPark())
                         parkTraj = drive.trajectoryBuilder(left.end())
@@ -145,7 +145,7 @@ public class ConditionalCase0 {
         goalDetection.sleep(goalDetection.getStartDelay());
         goalDetection.telemetry.update();
         if (goalDetection.getDeliverWobble()) {
-            robot.toggleFlyWheel(true, 2970);
+            robot.toggleFlyWheel(true, 3200);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3);
             robot.toggleFlyWheel(false);
@@ -168,7 +168,7 @@ public class ConditionalCase0 {
             robot.dropArm(20);
         } else {
             if (goalDetection.getIsFirst()) {
-                robot.toggleFlyWheel(true, 2970);
+                robot.toggleFlyWheel(true, 3200);
                 drive.followTrajectory(shootingPositionTraj);
                 robot.shootrings(3);
                 robot.toggleFlyWheel(false);
@@ -195,7 +195,7 @@ public class ConditionalCase0 {
                 robot.toggleFlyWheel(false);
 
                  */
-                robot.toggleFlyWheel(true, 2950);
+                robot.toggleFlyWheel(true, 3100);
                 drive.followTrajectory(waitForOthersTraj);
                 goalDetection.sleep(2000);
                 drive.followTrajectory(left);

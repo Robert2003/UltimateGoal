@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.EverythingForTeleOP.RobotDefinition_ForTel
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 
 @TeleOp(group = "advanced")
-@Disabled
 public class Adjusting_AugmentedDriving extends LinearOpMode {
     // Define 2 states, drive control or automatic control
     enum Mode {

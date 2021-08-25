@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.cases
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.RobotDefinition_ForAuto;
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.UltimateGoalDetectionConditional;
@@ -128,7 +129,7 @@ public class ConditionalCase1 {
             } else {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, -3), -5.95)
+                            .splineTo(new Vector2d(58, -3), -5.7)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .lineToLinearHeading(new Pose2d(85, 0, 0.251))
@@ -184,7 +185,7 @@ public class ConditionalCase1 {
         goalDetection.sleep(goalDetection.getStartDelay());
         if (goalDetection.getDeliverWobble()) {
             drive = new SampleMecanumDrive(goalDetection.hardwareMap, true);
-            robot.toggleFlyWheel(true, 2970);
+            robot.toggleFlyWheel(true, 3200);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3);
             robot.toggleFlyWheel(false);
@@ -195,7 +196,7 @@ public class ConditionalCase1 {
             robot.dropWobble();
             drive.followTrajectory(backTraj);
             robot.dropArm(300);
-            robot.toggleFlyWheel(true, 2970);
+            robot.toggleFlyWheel(true, 3200);
             robot.toggleIntake();
             robot.toggleIntakeServo(true);
             drive.followTrajectory(stackTraj);
@@ -219,7 +220,7 @@ public class ConditionalCase1 {
             robot.toggleIntakeServo(false);
         } else {
             if (goalDetection.getIsFirst()) {
-                robot.toggleFlyWheel(true, goalDetection.getIsRed() ? 2970 : 2950);
+                robot.toggleFlyWheel(true, goalDetection.getIsRed() ? 3200 : 3180);
                 drive.followTrajectory(shootingPositionTraj);
                 robot.shootrings(3);
                 robot.toggleFlyWheel(false);
@@ -233,7 +234,7 @@ public class ConditionalCase1 {
                 if (goalDetection.getIsRed()) drive.followTrajectory(strafeTraj);
                 if (goalDetection.getCollectStack()) {
                     robot.toggleIntakeServo(true);
-                    robot.toggleFlyWheel(true, goalDetection.getIsFirst() ? 2950 : 2930);
+                    robot.toggleFlyWheel(true, goalDetection.getIsFirst() ? 3180 : 3160);
                     robot.toggleIntake();
                     drive.followTrajectory(stackTraj);
                     drive.followTrajectory(shootingPositionTraj2);
@@ -249,7 +250,7 @@ public class ConditionalCase1 {
                 robot.dropArm(670);
                 goalDetection.sleep(1000);
                 robot.dropWobble();
-                robot.toggleFlyWheel(true, 2970);
+                robot.toggleFlyWheel(true, 3200);
                 drive.followTrajectory(shootingPositionTraj);
                 robot.wobbleServo.setPosition(0.45);
                 robot.dropArm(20);
@@ -268,5 +269,7 @@ public class ConditionalCase1 {
             }
         }
     }
+
+
 
 }
