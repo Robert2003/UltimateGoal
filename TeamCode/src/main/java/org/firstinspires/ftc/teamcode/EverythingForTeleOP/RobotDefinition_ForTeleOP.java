@@ -17,13 +17,13 @@ public class RobotDefinition_ForTeleOP {
 
     public Servo servo, wobbleServo, intakeServo;
 
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(55, 0, 10, 12.7);
 
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    public static int GOAL_RPM = 3240; //era 3200, 3100, 3000, 3200
-    public static int INTERMEDIATE_RPM = 3140; //2940
+    public static int GOAL_RPM = 3250; //era 3200, 3100, 3000, 3200
+    public static int INTERMEDIATE_RPM = 3120; //2940
     public static int POWERSHOTS_RPM = 3000; // era 2800, 2750
 
 
@@ -76,7 +76,6 @@ public class RobotDefinition_ForTeleOP {
             wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             wobbleArm.setPower(gamepad2.left_trigger * -0.4); //-0.5
         } else if (gamepad2.right_trigger != 0) {
-            trigger = true;
             wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             wobbleArm.setPower(gamepad2.right_trigger * 0.4);
         } else if (trigger) {

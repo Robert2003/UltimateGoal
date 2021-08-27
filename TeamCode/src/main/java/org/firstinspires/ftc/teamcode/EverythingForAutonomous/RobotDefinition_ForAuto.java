@@ -23,7 +23,7 @@ public class RobotDefinition_ForAuto
     public double strafe;
     public double rotate;
 
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(55, 0, 10, 12.7);
 
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;

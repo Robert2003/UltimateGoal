@@ -13,10 +13,10 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 //@Disabled
 @Config
 @TeleOp
-@Disabled
+//@Disabled
 public class SamplePIDUse extends LinearOpMode {
     // Copy your PIDF Coefficients here
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(55, 0, 10, 12.7);
 
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;

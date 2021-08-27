@@ -103,7 +103,7 @@ public class ConditionalCase0 {
             } else {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, -3), -5.7)
+                            .splineTo(new Vector2d(58, -3), 0.3)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .splineTo(new Vector2d(94, 25), -3.844) // 74, -20 4.712
@@ -113,7 +113,7 @@ public class ConditionalCase0 {
                                 .lineToLinearHeading(new Pose2d(95, -12.5, 0))
                                 .build();
                         parkTraj = drive.trajectoryBuilder(backTraj.end())
-                                .lineToLinearHeading(new Pose2d(72, -11, 0))
+                                .lineToLinearHeading(new Pose2d(72, -9, 0))
                                 .build();
                     }
 
@@ -145,7 +145,7 @@ public class ConditionalCase0 {
         goalDetection.sleep(goalDetection.getStartDelay());
         goalDetection.telemetry.update();
         if (goalDetection.getDeliverWobble()) {
-            robot.toggleFlyWheel(true, 3200);
+            robot.toggleFlyWheel(true, 3215);
             drive.followTrajectory(shootingPositionTraj);
             robot.shootrings(3);
             robot.toggleFlyWheel(false);

@@ -51,6 +51,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class UltimateGoalDetectionConditional extends LinearOpMode {
     boolean finishedAuto = false;
 
+    public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(250, 75);
+
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
@@ -151,32 +153,10 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          */
 
         //public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 15 * 2.5); //red first
-        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195 * 2.5, 270 * 2.5); //red second
-        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194 * 2.5, 260 * 2.5); //blue first
-        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 0 * 2.5); //blue second
         Point region1_pointA;
         Point region1_pointB;
 
         public SkystoneDeterminationPipeline(UltimateGoalDetectionConditional cond) {
-            boolean isRed = cond.getIsRed();
-            boolean isFirst = cond.getIsFirst();
-            if (isRed) {
-                if (isFirst) {
-                    cond.telemetry.addData("C", "red first");
-                } else {
-                    REGION1_TOPLEFT_ANCHOR_POINT = REGION2_TOPLEFT_ANCHOR_POINT;
-                    cond.telemetry.addData("C", "red second");
-                }
-            } else {
-                if (isFirst) {
-                    REGION1_TOPLEFT_ANCHOR_POINT = REGION3_TOPLEFT_ANCHOR_POINT;
-                    cond.telemetry.addData("C", "blue first");
-                } else {
-                    REGION1_TOPLEFT_ANCHOR_POINT = REGION4_TOPLEFT_ANCHOR_POINT;
-                    cond.telemetry.addData("C", "blue second");
-                }
-            }
             region1_pointA = new Point(
                     REGION1_TOPLEFT_ANCHOR_POINT.x,
                     REGION1_TOPLEFT_ANCHOR_POINT.y);
@@ -203,11 +183,11 @@ public class UltimateGoalDetectionConditional extends LinearOpMode {
          */
 
 
-        public static final float REGION_WIDTH = 35 * 2.5f;
-        public static final float REGION_HEIGHT = 25 * 2.5f;
+        public static final float REGION_WIDTH = 25 * 2.5f;
+        public static final float REGION_HEIGHT = 35 * 2.5f;
 
         static final int FOUR_RING_THRESHOLD = 140;
-        static final int ONE_RING_THRESHOLD = 124;
+        static final int ONE_RING_THRESHOLD = 130;
 
 
         /*

@@ -44,18 +44,18 @@ public class CameraAdjusting extends LinearOpMode {
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
-        while(!isStopRequested()){
-            sleep(1500);
+        while (!isStopRequested()) {
+            sleep(1200);
             telemetry.addData("Disks", pipeline.position);
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
             telemetry.addData("Threshold", pipeline.ONE_RING_THRESHOLD + "/" + pipeline.FOUR_RING_THRESHOLD);
-            telemetry.addData("Checking", Arrays.asList(SkystoneDeterminationPipeline.
-                    SQUARE.values()).get(pipeline.getSelectedSquare()));
-            if(gamepad1.dpad_down){
-                pipeline.loopNextSquare();
-                sleep(200);
-            }
+            /**
+             if(gamepad1.dpad_down){
+             pipeline.loopNextSquare();
+             sleep(200);
+             }
+             */
             telemetry.update();
         }
         waitForStart();
@@ -66,10 +66,10 @@ public class CameraAdjusting extends LinearOpMode {
          * An enum to define the skystone position
          */
 
-        public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-        public Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-        public Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
-        public Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 15 * 2.5); //red first
+        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195 * 2.5, 270 * 2.5); //red second
+        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194 * 2.5, 260 * 2.5); //blue first
+        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 0 * 2.5); //blue second
         Point region1_pointA;
         Point region1_pointB;
         Point region2_pointA;
@@ -84,13 +84,7 @@ public class CameraAdjusting extends LinearOpMode {
         public SkystoneDeterminationPipeline(CameraAdjusting cameraAd) {
             cameraAdjusting = cameraAd;
             REGION1_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
-                    SkystoneDeterminationPipeline.REGION1_TOPLEFT_ANCHOR_POINT;
-            REGION2_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
-                    SkystoneDeterminationPipeline.REGION2_TOPLEFT_ANCHOR_POINT;
-            REGION3_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
-                    SkystoneDeterminationPipeline.REGION3_TOPLEFT_ANCHOR_POINT;
-            REGION4_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
-                    SkystoneDeterminationPipeline.REGION4_TOPLEFT_ANCHOR_POINT;
+                    REGION1_TOPLEFT_ANCHOR_POINT;
 
             region1_pointA = new Point(
                     REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -98,27 +92,42 @@ public class CameraAdjusting extends LinearOpMode {
             region1_pointB = new Point(
                     REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
                     REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            /**
+             REGION2_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+             SkystoneDeterminationPipeline.REGION2_TOPLEFT_ANCHOR_POINT;
+             REGION3_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+             SkystoneDeterminationPipeline.REGION3_TOPLEFT_ANCHOR_POINT;
+             REGION4_TOPLEFT_ANCHOR_POINT = UltimateGoalDetectionConditional.
+             SkystoneDeterminationPipeline.REGION4_TOPLEFT_ANCHOR_POINT;
 
-            region2_pointA = new Point(
-                    REGION2_TOPLEFT_ANCHOR_POINT.x,
-                    REGION2_TOPLEFT_ANCHOR_POINT.y);
-            region2_pointB = new Point(
-                    REGION2_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                    REGION2_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+             region1_pointA = new Point(
+             REGION1_TOPLEFT_ANCHOR_POINT.x,
+             REGION1_TOPLEFT_ANCHOR_POINT.y);
+             region1_pointB = new Point(
+             REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+             REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
-            region3_pointA = new Point(
-                    REGION3_TOPLEFT_ANCHOR_POINT.x,
-                    REGION3_TOPLEFT_ANCHOR_POINT.y);
-            region3_pointB = new Point(
-                    REGION3_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                    REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+             region2_pointA = new Point(
+             REGION2_TOPLEFT_ANCHOR_POINT.x,
+             REGION2_TOPLEFT_ANCHOR_POINT.y);
+             region2_pointB = new Point(
+             REGION2_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+             REGION2_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
-            region4_pointA = new Point(
-                    REGION4_TOPLEFT_ANCHOR_POINT.x,
-                    REGION4_TOPLEFT_ANCHOR_POINT.y);
-            region4_pointB = new Point(
-                    REGION4_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                    REGION4_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+             region3_pointA = new Point(
+             REGION3_TOPLEFT_ANCHOR_POINT.x,
+             REGION3_TOPLEFT_ANCHOR_POINT.y);
+             region3_pointB = new Point(
+             REGION3_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+             REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+             region4_pointA = new Point(
+             REGION4_TOPLEFT_ANCHOR_POINT.x,
+             REGION4_TOPLEFT_ANCHOR_POINT.y);
+             region4_pointB = new Point(
+             REGION4_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+             REGION4_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+             */
         }
 
 
@@ -131,11 +140,14 @@ public class CameraAdjusting extends LinearOpMode {
         /*
          * Some color constants
          */
-        static final Scalar BLUE = new Scalar(0, 0, 255);
-        static final Scalar LIGHT_BLUE = new Scalar(52, 229, 235);
-        static final Scalar RED = new Scalar(255, 0, 0);
-        static final Scalar LIGHT_RED = new Scalar(255, 120, 120);
-        static final Scalar GREEN = new Scalar(0, 255, 0);
+        static final Scalar RED = new Scalar(143, 205, 241);
+        /**
+         * static final Scalar BLUE = new Scalar(0, 0, 255);
+         * static final Scalar LIGHT_BLUE = new Scalar(52, 229, 235);
+         * static final Scalar RED = new Scalar(255, 0, 0);
+         * static final Scalar LIGHT_RED = new Scalar(255, 120, 120);
+         * static final Scalar GREEN = new Scalar(0, 255, 0);
+         */
 
         /*
          * The core values which define the location and size of the sample regions
@@ -205,24 +217,26 @@ public class CameraAdjusting extends LinearOpMode {
                     region1_pointB, // Second point which defines the rectangle
                     RED, // The color the rectangle is drawn in
                     2); // Negative thickness means solid fill
-            Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region2_pointA, // First point which defines the rectangle
-                    region2_pointB, // Second point which defines the rectangle
-                    LIGHT_RED, // The color the rectangle is drawn in
-                    2); // Negative thickness means solid fill
-            Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region3_pointA, // First point which defines the rectangle
-                    region3_pointB, // Second point which defines the rectangle
-                    BLUE, // The color the rectangle is drawn in
-                    2); // Negative thickness means solid fill
-            Imgproc.rectangle(
-                    input, // Buffer to draw on
-                    region4_pointA, // First point which defines the rectangle
-                    region4_pointB, // Second point which defines the rectangle
-                    LIGHT_BLUE, // The color the rectangle is drawn in
-                    2); // Negative thickness means solid fill
+            /**
+             Imgproc.rectangle(
+             input, // Buffer to draw on
+             region2_pointA, // First point which defines the rectangle
+             region2_pointB, // Second point which defines the rectangle
+             LIGHT_RED, // The color the rectangle is drawn in
+             2); // Negative thickness means solid fill
+             Imgproc.rectangle(
+             input, // Buffer to draw on
+             region3_pointA, // First point which defines the rectangle
+             region3_pointB, // Second point which defines the rectangle
+             BLUE, // The color the rectangle is drawn in
+             2); // Negative thickness means solid fill
+             Imgproc.rectangle(
+             input, // Buffer to draw on
+             region4_pointA, // First point which defines the rectangle
+             region4_pointB, // Second point which defines the rectangle
+             LIGHT_BLUE, // The color the rectangle is drawn in
+             2); // Negative thickness means solid fill
+             */
             return input;
         }
 
@@ -230,42 +244,48 @@ public class CameraAdjusting extends LinearOpMode {
             return avg1;
         }
 
-        int selectedSquare = 0;
+        /**
+         * int selectedSquare = 0;
+         * <p>
+         * public void loopNextSquare(){
+         * selectedSquare++;
+         * if(selectedSquare == SQUARE.values().length)
+         * selectedSquare = 0;
+         * region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+         * switch (selectedSquare){
+         * case 0:
+         * region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+         * break;
+         * case 1:
+         * region1_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
+         * break;
+         * case 2:
+         * region1_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
+         * break;
+         * case 3:
+         * region1_Cb = Cb.submat(new Rect(region4_pointA, region4_pointB));
+         * break;
+         * }
+         * }
+         */
 
-        public void loopNextSquare(){
-            selectedSquare++;
-            if(selectedSquare == SQUARE.values().length)
-                selectedSquare = 0;
-            switch (selectedSquare){
-                case 0:
-                    region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
-                    break;
-                case 1:
-                    region1_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
-                    break;
-                case 2:
-                    region1_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
-                    break;
-                case 3:
-                    region1_Cb = Cb.submat(new Rect(region4_pointA, region4_pointB));
-                    break;
-            }
-        }
-
-        public enum SQUARE{
+        public enum SQUARE {
             RED,
             LIGHT_RED,
             BLUE,
             LIGHT_BLUE
         }
 
-        public int getSelectedSquare() {
-            return selectedSquare;
-        }
+        /**
+         public int getSelectedSquare() {
+         return selectedSquare;
+         }
 
-        public void setSelectedSquare(int selectedSquare) {
-            this.selectedSquare = selectedSquare;
-        }
+         public void setSelectedSquare(int selectedSquare) {
+         this.selectedSquare = selectedSquare;
+         }
+         */
+
 
     }
 

@@ -78,20 +78,20 @@ public class ConditionalCase1 {
             if (goalDetection.getIsRed()) {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, 3), 6.02)
+                            .splineTo(new Vector2d(58, 3), 6.10)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
-                            .lineToLinearHeading(new Pose2d(92, 9.6, -1.5))
+                            .lineToLinearHeading(new Pose2d(92, 8, -1.2))
                             .build();
                     strafeTraj = drive.trajectoryBuilder(wobbleTraj.end())
-                            .lineToLinearHeading(new Pose2d(40, 9.6, 1.57))
+                            .lineToLinearHeading(new Pose2d(40, 8, 1.57))
                             .build();
                     if (goalDetection.getCollectStack()) {
                         stackTraj = drive.trajectoryBuilder(strafeTraj.end(), true)
                                 .splineTo(new Vector2d(40, -14), -1.57)
                                 .build();
                         shootingPositionTraj2 = drive.trajectoryBuilder(stackTraj.end(), false)
-                                .lineToLinearHeading(new Pose2d(58, 3, 6.02))
+                                .lineToLinearHeading(new Pose2d(58, 3, 6.10))
                                 .build();
                     }
                     if (goalDetection.getPark() && goalDetection.getCollectStack())
@@ -99,7 +99,7 @@ public class ConditionalCase1 {
                                 .lineToLinearHeading(new Pose2d(72, 11, 0))
                                 .build();
                     else if (goalDetection.getPark())
-                        parkTraj = drive.trajectoryBuilder(strafeTraj.end())
+                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
                                 .lineToLinearHeading(new Pose2d(72, 11, 0))
                                 .build();
                 } else {
@@ -129,7 +129,7 @@ public class ConditionalCase1 {
             } else {
                 if (goalDetection.getIsFirst()) {
                     shootingPositionTraj = drive.trajectoryBuilder(new Pose2d())
-                            .splineTo(new Vector2d(58, -3), -5.7)
+                            .splineTo(new Vector2d(58, -3), 0.3)
                             .build();
                     wobbleTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
                             .lineToLinearHeading(new Pose2d(85, 0, 0.251))
@@ -231,7 +231,7 @@ public class ConditionalCase1 {
                 robot.dropArm(20);
                 robot.wobbleServo.setPosition(0.45);
                 goalDetection.sleep(400);
-                if (goalDetection.getIsRed()) drive.followTrajectory(strafeTraj);
+                if (goalDetection.getIsRed() && goalDetection.getCollectStack()) drive.followTrajectory(strafeTraj);
                 if (goalDetection.getCollectStack()) {
                     robot.toggleIntakeServo(true);
                     robot.toggleFlyWheel(true, goalDetection.getIsFirst() ? 3180 : 3160);
@@ -256,9 +256,9 @@ public class ConditionalCase1 {
                 robot.dropArm(20);
                 goalDetection.sleep(500);
                 robot.shootrings(3, 1000);
-                robot.toggleIntake();
                 if(goalDetection.getCollectStack())
                 {
+                    robot.toggleIntake();
                     drive.followTrajectory(stackTraj);
                     drive.followTrajectory(shootingPositionTraj2);
                     robot.shootrings(3, 500);

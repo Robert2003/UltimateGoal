@@ -23,23 +23,17 @@ package org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.RobotDefinition_ForAuto;
 import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.cases.ConditionalCase0;
+import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.cases.ConditionalCase1;
+import org.firstinspires.ftc.teamcode.EverythingForAutonomous.conditional.cases.ConditionalCase4;
 import org.firstinspires.ftc.teamcode.FromRoadRunner.SampleMecanumDrive;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -56,60 +50,43 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Config
 @Autonomous
 @Disabled
-public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
-{
+public class UltimateGoalDetectionConditionalBackup extends LinearOpMode {
     boolean finishedAuto = false;
 
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(50, 0, 7, 13.7);
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    ElapsedTime runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
 
-    public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
-    boolean isRed, isFirst, collectStack, park, waitingAnswer;
-
+    //public Trajectory spline, traj1, traj2, traj3, traj4, traj5, traj6, traj7, traj8, traj9, pushDisksTraj1, pushDisksTraj2, pushDisksTraj3, pushDisksTraj4;
+    boolean isRed = true, isFirst = true, deliverWobble, collectStack, shouldPark, waitingAnswer, pressingSelectionButton;
+    int selectedCase, startDelay = 0;
+    //delays
+    //int collectStackDelay, parkDelay, shootDelay;
+    int selectedAnswer = 1;
 
     OpenCvWebcam webCam;
     SkystoneDeterminationPipeline pipeline;
     String WEBCAM_NAME = "Webcam";
 
+    SampleMecanumDrive drive;
+    RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
+
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotorEx flyWheel = null;
-        DcMotor wobbleArm = null;
-        Servo wobbleServo, servo, intakeServo;
-        flyWheel = hardwareMap.get(DcMotorEx.class, "flyWheel");
-        wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
-        servo = hardwareMap.get(Servo.class, "servo");
-        wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
-        wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, false);
-        DcMotor intake1   = null, intake2 = null;
-        intake1   = hardwareMap.get(DcMotor.class, "intake1");
-        intake2   = hardwareMap.get(DcMotor.class, "intake2");
-        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        intakeServo.setPosition(0.9);
-        intake2.setDirection(DcMotor.Direction.REVERSE);
-        wobbleServo.setPosition(1);
-        servo.setPosition(0.55);
 
-        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
-        MotorConfigurationType motorConfigurationType = flyWheel.getMotorType().clone();
-        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-        flyWheel.setMotorType(motorConfigurationType);
+        askQuestions(); /** AICI SELECTAM CUM SA SE COMPORTE ROBOTUL IN FUNCTIE DE ALTI ROBOTI*/
+        showcaseAnswers();
+        confirmAnswers();
 
-        flyWheel.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d,
-                MOTOR_VELO_PID.f * 12 / hardwareMap.voltageSensor.iterator().next().getVoltage()
-        ));
+
+        drive = new SampleMecanumDrive(hardwareMap, false);
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webCam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
+        /**pipeline = new SkystoneDeterminationPipeline(this);*/
         webCam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
@@ -117,265 +94,104 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
         // landscape orientation, though.
         webCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT));
+        webCam.openCameraDeviceAsync(() -> webCam.startStreaming(800, 600, OpenCvCameraRotation.SIDEWAYS_LEFT)); //320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT)
 
         FtcDashboard.getInstance().startCameraStream(webCam, 0);
 
-        RobotDefinition_ForAuto robot = new RobotDefinition_ForAuto();
         robot.init(hardwareMap);
 
-
-        /** CASE 0 **/
-        Trajectory shootingPosition_0 = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(58, 3), 6.02)
-                .build();
-        Trajectory firstWobble_0 = drive.trajectoryBuilder(shootingPosition_0.end())
-                .splineTo(new Vector2d(74, -20), 4.712)
-                .build();
-        Trajectory back_0 = drive.trajectoryBuilder(firstWobble_0.end())
-                .back(10)
-                .build();
-        Trajectory grabSecondWobble_0 = drive.trajectoryBuilder(back_0.end(), true)
-                .lineToLinearHeading(new Pose2d(38, -21, 3.14))
-                .build();
-        Trajectory forward_0 = drive.trajectoryBuilder(grabSecondWobble_0.end(), true)
-                .forward(10)
-                .build();
-        Trajectory dropSecondWobble_0 = drive.trajectoryBuilder(forward_0.end())
-                .lineToLinearHeading(new Pose2d(63, -20, 4.712))
-                .build();
-        Trajectory park_0 = drive.trajectoryBuilder(dropSecondWobble_0.end())
-                .lineToLinearHeading(new Pose2d(72, -10, 4.712))
-                .build();
-        /** CASE 0 **/
-
-        /** CASE 1 **/
-        Trajectory shootingPosition1_1 = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(58, 3), 6.02)
-                .build();
-        Trajectory firstWobble_1 = drive.trajectoryBuilder(shootingPosition1_1.end())
-                .splineTo(new Vector2d(85.85, -2.508), 5.3733)
-                .build();
-        Trajectory back_1 = drive.trajectoryBuilder(firstWobble_1.end())
-                .back(10)
-                .build();
-        Trajectory takeOneDisk_1 = drive.trajectoryBuilder(back_1.end(), true)
-                .splineTo(new Vector2d(38.119, -14), 0.275+3.14)
-                .build();
-        Trajectory shootingPosition2_1 = drive.trajectoryBuilder(takeOneDisk_1.end(), false)
-                .splineTo(new Vector2d(55, -18), 0.01)
-                .build();
-        Trajectory grabSecondWobble_1 = drive.trajectoryBuilder(shootingPosition2_1.end(), true)
-                .lineToLinearHeading(new Pose2d(40, -21, 3.14))
-                .build();
-        Trajectory forward_1 = drive.trajectoryBuilder(grabSecondWobble_1.end(), true)
-                .forward(12)
-                .build();
-        Trajectory dropSecondWobble_1 = drive.trajectoryBuilder(forward_1.end())
-                .lineToLinearHeading(new Pose2d(74.23, -13.25, 5.8))
-                .build();
-        /** CASE 1 **/
-
-        /** CASE 4 **/
-        Trajectory shootingPosition1_4 = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(58, 3), 6.02)
-                .build();
-        Trajectory firstWobble_4 = drive.trajectoryBuilder(shootingPosition1_4.end())
-                .splineTo(new Vector2d(108.6, -28.7), 5.43)
-                .addTemporalMarker(0.1, () -> {
-                    robot.dropArm(630);
-                })
-                .build();
-        Trajectory back_4 = drive.trajectoryBuilder(firstWobble_4.end())
-                .back(10)
-                .build();
-        Trajectory goNextToRings_4 = drive.trajectoryBuilder(firstWobble_4.end(), true)
-                .lineToLinearHeading(new Pose2d(56.6, -11, 0.02))
-                .addTemporalMarker(0.1, () -> {
-                    robot.toggleIntakeServo(true);
-                    robot.dropArm(300);
-                    robot.toggleIntake();
-                    robot.toggleFlyWheel(true, 3000);
-                })
-                .build();
-        Trajectory firstRing_4 = drive.trajectoryBuilder(goNextToRings_4.end(), true)
-                .lineToLinearHeading(new Pose2d(47, -11, 6.2))
-                .build();
-        Trajectory secondRing_4 = drive.trajectoryBuilder(firstRing_4.end(), true)
-                .lineToLinearHeading(new Pose2d(37, -11, 6.2))
-                .build();
-        Trajectory thirdRing_4 = drive.trajectoryBuilder(secondRing_4.end(), true)
-                .lineToLinearHeading(new Pose2d(32, -11, 6.25))
-                .addTemporalMarker(0.1, () -> {
-                    robot.toggleFlyWheel(true, 3080);
-                })
-                .build();
-        Trajectory fourthRing_4 = drive.trajectoryBuilder(thirdRing_4.end(), true)
-                .lineToLinearHeading(new Pose2d(20, -11, 6.25))
-                .build();
-        Trajectory secondWobbleGoal_4 = drive.trajectoryBuilder(fourthRing_4.end(), true)
-                .lineToLinearHeading(new Pose2d(15.73, 1.56, 4.43))
-                .addTemporalMarker(0.1, () -> {
-                    robot.toggleFlyWheel(false);
-                    robot.toggleIntake();
-                    robot.dropArm(800);
-                })
-                .build();
-        Trajectory forward_4 = drive.trajectoryBuilder(secondWobbleGoal_4.end(), true)
-                .lineToLinearHeading(new Pose2d(12.68, -11, 4.43))
-                .build();
-        Trajectory dropSecondWobble_4 = drive.trajectoryBuilder(forward_4.end())
-                .lineToLinearHeading(new Pose2d(103, -29, 5.496))
-                .addTemporalMarker(0.1, () -> {
-                    robot.dropArm(650);
-                })
-                .build();
-        Trajectory park_4 = drive.trajectoryBuilder(dropSecondWobble_4.end())
-                .lineTo(new Vector2d(70, -29))
-                .addTemporalMarker(0.1, () -> {
-                    robot.wobbleServo.setPosition(0.45);
-                    robot.dropArm(20);
-                })
-                .build();
-        /** CASE 4 **/
-
-        telemetry.addData("Q1", "Is the robot on the red side? \n" +
-                "x if yes, else a");
-        telemetry.update();
-
-        waitingAnswer=true;
-        while(waitingAnswer)
-        {
-            if(gamepad1.x)
-            {
-                waitingAnswer=false;
-                isRed=true;
-            }
-            else if(gamepad1.a)
-            {
-                isRed=false;
-                waitingAnswer=false;
-            }
-        }
-        telemetry.addData("R1", isRed);
-        telemetry.update();
+        /**ConditionalCase0 conditionalCase0 = new ConditionalCase0(this);
+        ConditionalCase1 conditionalCase1 = new ConditionalCase1(this);
+        ConditionalCase4 conditionalCase4 = new ConditionalCase4(this);
+         */
 
         waitForStart();
         runtime.reset();
 
-        while (opModeIsActive() && !finishedAuto)
-        {
-            while(runtime.milliseconds()<100);
+        while (runtime.milliseconds() < 700 && opModeIsActive());
 
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.addData("Position", pipeline.position);
-            telemetry.update();
+        webCam.stopStreaming();
+        webCam.closeCameraDevice();
 
-            SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
 
-            switch(lastPosition)
-            {
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.position);
+        telemetry.update();
+
+        SkystoneDeterminationPipeline.RingPosition lastPosition = pipeline.position;
+
+        if (selectedCase == 0) lastPosition = SkystoneDeterminationPipeline.RingPosition.NONE;
+        else if (selectedCase == 1)
+            lastPosition = SkystoneDeterminationPipeline.RingPosition.ONE;
+        else if (selectedCase == 4)
+            lastPosition = SkystoneDeterminationPipeline.RingPosition.FOUR;
+
+        startDelay *= 1000;
+        /**while(opModeIsActive() && !isStopRequested() && !finishedAuto) {
+            switch (lastPosition) {
                 case NONE:
-                    robot.toggleFlyWheel(true, 2970);
-                    drive.followTrajectory(shootingPosition_0);
-                    robot.shootrings(3);
-                    robot.toggleFlyWheel(false);
-                    drive.followTrajectory(firstWobble_0);
-                    robot.dropArm(670);
-                    sleep(1000);
-                    robot.dropWobble();
-                    drive.followTrajectory(back_0);
-                    robot.dropArm(780);
-                    drive.followTrajectory(grabSecondWobble_0);
-                    drive.followTrajectory(forward_0);
-                    sleep(800);
-                    robot.grabWobble();
-                    drive.followTrajectory(dropSecondWobble_0);
-                    robot.dropArm(670);
-                    robot.dropWobble();
-                    drive.followTrajectory(park_0);
-                    robot.wobbleServo.setPosition(0.45);
-                    sleep(400);
-                    robot.dropArm(20);
+                    conditionalCase0.runCase();
                     finishedAuto = true;
                     break;
-
                 case ONE:
-                    robot.toggleFlyWheel(true, 2970);
-                    drive.followTrajectory(shootingPosition1_1);
-                    robot.shootrings(3);
-                    robot.toggleFlyWheel(false);
-                    drive.followTrajectory(firstWobble_1);
-                    sleep(500);
-                    robot.dropArm(600);
-                    sleep(500);
-                    robot.dropWobble();
-                    drive.followTrajectory(back_1);
-                    robot.dropArm(300);
-                    robot.toggleFlyWheel(true, 3000);
-                    robot.toggleIntake();
-                    drive.followTrajectory(takeOneDisk_1);
-                    drive.followTrajectory(shootingPosition2_1);
-                    sleep(500);
-                    robot.shootrings(1);
-                    robot.toggleFlyWheel(false);
-                    robot.dropArm(780);
-                    robot.toggleIntake();
-                    drive.followTrajectory(grabSecondWobble_1);
-                    sleep(400);
-                    drive.followTrajectory(forward_1);
-                    sleep(800);
-                    robot.grabWobble();
-                    drive.followTrajectory(dropSecondWobble_1);
-                    robot.dropArm(650);
-                    robot.dropWobble();
-                    robot.wobbleServo.setPosition(0.45);
-                    sleep(400);
-                    robot.dropArm(20);
+                    conditionalCase1.runCase();
                     finishedAuto = true;
                     break;
                 case FOUR:
-                    drive = new SampleMecanumDrive(hardwareMap, true);
-
-                    robot.toggleFlyWheel(true, 2990);
-                    drive.followTrajectory(shootingPosition1_4);
-                    robot.shootrings(3);
-                    robot.toggleFlyWheel(false);
-                    drive.followTrajectory(firstWobble_4);
-                    robot.dropWobble();
-                    //drive.followTrajectory(back_4);
-                    drive.followTrajectory(goNextToRings_4);
-                    drive.followTrajectory(firstRing_4);
-                    drive.followTrajectory(secondRing_4);
-                    sleep(500);
-                    robot.shootrings(2);
-                    drive.followTrajectory(thirdRing_4);
-                    drive.followTrajectory(fourthRing_4);
-                    sleep(500);
-                    robot.shootrings(3);
-                    drive.followTrajectory(secondWobbleGoal_4);
-                    drive.followTrajectory(forward_4);
-                    robot.grabWobble();
-                    drive.followTrajectory(dropSecondWobble_4);
-                    robot.dropWobble();
-                    drive.followTrajectory(park_4);
+                    conditionalCase4.runCase();
                     finishedAuto = true;
                     break;
             }
-            // Don't burn CPU cycles busy-looping in this sample
-            //sleep(50);
-
-
         }
+         */
+        // Don't burn CPU cycles busy-looping in this sample
+        //sleep(50);
+
     }
 
-    public static class SkystoneDeterminationPipeline extends OpenCvPipeline
-    {
+    public static class SkystoneDeterminationPipeline extends OpenCvPipeline {
         /*
          * An enum to define the skystone position
          */
-        public enum RingPosition
-        {
+
+        //public Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181, 15);
+        public static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 15 * 2.5); //red first
+        public static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(195 * 2.5, 270 * 2.5); //red second
+        public static Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(194 * 2.5, 260 * 2.5); //blue first
+        public static Point REGION4_TOPLEFT_ANCHOR_POINT = new Point(181 * 2.5, 0 * 2.5); //blue second
+        Point region1_pointA;
+        Point region1_pointB;
+
+        public SkystoneDeterminationPipeline(UltimateGoalDetectionConditional cond) {
+            boolean isRed = cond.getIsRed();
+            boolean isFirst = cond.getIsFirst();
+            if (isRed) {
+                if (isFirst) {
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION4_TOPLEFT_ANCHOR_POINT;
+                    cond.telemetry.addData("C", "red first");
+                } else {
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION2_TOPLEFT_ANCHOR_POINT;
+                    cond.telemetry.addData("C", "red second");
+                }
+            } else {
+                if (isFirst) {
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION3_TOPLEFT_ANCHOR_POINT;
+                    cond.telemetry.addData("C", "blue first");
+                } else {
+                    REGION1_TOPLEFT_ANCHOR_POINT = REGION4_TOPLEFT_ANCHOR_POINT;
+                    cond.telemetry.addData("C", "blue second");
+                }
+            }
+            region1_pointA = new Point(
+                    REGION1_TOPLEFT_ANCHOR_POINT.x,
+                    REGION1_TOPLEFT_ANCHOR_POINT.y);
+            region1_pointB = new Point(
+                    REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                    REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            cond.telemetry.update();
+        }
+
+        public enum RingPosition {
             FOUR,
             ONE,
             NONE
@@ -390,20 +206,14 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,15);
 
-        static final int REGION_WIDTH = 35;
-        static final int REGION_HEIGHT = 25;
 
-        final int FOUR_RING_THRESHOLD = 145;
-        final int ONE_RING_THRESHOLD = 136;
+        public static final float REGION_WIDTH = 35 * 2.5f;
+        public static final float REGION_HEIGHT = 25 * 2.5f;
 
-        Point region1_pointA = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x,
-                REGION1_TOPLEFT_ANCHOR_POINT.y);
-        Point region1_pointB = new Point(
-                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+        static final int FOUR_RING_THRESHOLD = 140;
+        static final int ONE_RING_THRESHOLD = 130;
+
 
         /*
          * Working variables
@@ -420,40 +230,38 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
          * This function takes the RGB frame, converts to YCrCb,
          * and extracts the Cb channel to the 'Cb' variable
          */
-        void inputToCb(Mat input)
-        {
+        void inputToCb(Mat input) {
             Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
             Core.extractChannel(YCrCb, Cb, 1);
         }
 
         @Override
-        public void init(Mat firstFrame)
-        {
+        public void init(Mat firstFrame) {
             inputToCb(firstFrame);
-
             region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
         }
 
         @Override
-        public Mat processFrame(Mat input)
-        {
+        public Mat processFrame(Mat input) {
             inputToCb(input);
 
             avg1 = (int) Core.mean(region1_Cb).val[0];
 
-            Imgproc.rectangle(
+            /*Imgproc.rectangle(
                     input, // Buffer to draw on
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
                     BLUE, // The color the rectangle is drawn in
                     2); // Thickness of the rectangle lines
 
+             */
+
             position = RingPosition.FOUR; // Record our analysis
-            if(avg1 > FOUR_RING_THRESHOLD){
+            if (avg1 > FOUR_RING_THRESHOLD) {
                 position = RingPosition.FOUR;
-            }else if (avg1 > ONE_RING_THRESHOLD){
+            } else if (avg1 > ONE_RING_THRESHOLD) {
                 position = RingPosition.ONE;
-            }else{
+            } else {
                 position = RingPosition.NONE;
             }
 
@@ -461,14 +269,13 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
                     input, // Buffer to draw on
                     region1_pointA, // First point which defines the rectangle
                     region1_pointB, // Second point which defines the rectangle
-                    GREEN, // The color the rectangle is drawn in
+                    BLUE, // The color the rectangle is drawn in
                     -1); // Negative thickness means solid fill
 
             return input;
         }
 
-        public int getAnalysis()
-        {
+        public int getAnalysis() {
             return avg1;
         }
     }
@@ -476,4 +283,293 @@ public class UltimateGoalDetectionConditionalBackup extends LinearOpMode
     public static double rpmToTicksPerSecond(double rpm) {
         return rpm * MOTOR_TICKS_PER_REV / MOTOR_GEAR_RATIO / 60;
     }
+
+    public SampleMecanumDrive getDrive() {
+        return drive;
+    }
+
+    public boolean getIsRed() {
+        return isRed;
+    }
+
+    public boolean getPark() {
+        return shouldPark;
+    }
+
+    public boolean getIsFirst() {
+        return isFirst;
+    }
+
+    public boolean getCollectStack() {
+        return collectStack;
+    }
+
+    public boolean getDeliverWobble() {
+        return deliverWobble;
+    }
+
+    public int getStartDelay() {
+        return startDelay;
+    }
+
+    private void askQuestions() {
+        telemetry.addData("Q1", "Is the robot on the red side? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                isRed = true;
+            } else if (gamepad1.x) {
+                isRed = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q2", "Is the robot on the first line? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                isFirst = true;
+            } else if (gamepad1.x) {
+                isFirst = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+        while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q3", "Should the robot park? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                shouldPark = true;
+            } else if (gamepad1.x) {
+                shouldPark = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q4", "Should the robot collect the stack? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                collectStack = true;
+            } else if (gamepad1.x) {
+                collectStack = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q5", "What case should the robot run? \n" +
+                "DPAD UP - Case 0\n" +
+                "DPAD RIGHT - Case 1\n" +
+                "DPAD DOWN - Case 4\n" +
+                "DPAD LEFT - Detection");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.dpad_up) {
+                waitingAnswer = false;
+                selectedCase = 0;
+            } else if (gamepad1.dpad_right) {
+                selectedCase = 1;
+                waitingAnswer = false;
+            } else if (gamepad1.dpad_down) {
+                selectedCase = 4;
+                waitingAnswer = false;
+            } else if (gamepad1.dpad_left) {
+                selectedCase = -1;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
+
+        telemetry.addData("Q6", "Should the robot deliver the second wobble? \n" +
+                "A - Yes\nX - No");
+        telemetry.update();
+
+        waitingAnswer = true;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.a) {
+                waitingAnswer = false;
+                deliverWobble = true;
+            } else if (gamepad1.x) {
+                deliverWobble = false;
+                waitingAnswer = false;
+            }
+        }
+
+        telemetry.addData("C", "Press Y to continue.");
+        telemetry.update();
+
+        while (!gamepad1.y && !isStopRequested()) ;
+    }
+
+    private void showcaseAnswers() {
+        telemetry.addData("A1", "Side: " + (isRed ? "RED" : "BLUE") + ((selectedAnswer == 1) ? " [X]" : ""));
+        telemetry.addData("A2", "Line: " + (isFirst ? "FIRST" : "SECOND") + ((selectedAnswer == 2) ? " [X]" : ""));
+        telemetry.addData("A3", "Park: " + (shouldPark ? "YES" : "NO") + ((selectedAnswer == 3) ? " [X]" : ""));
+        telemetry.addData("A4", "Collect stack: " + (collectStack ? "YES" : "NO") + ((selectedAnswer == 4) ? " [X]" : ""));
+        if (selectedCase == -1)
+            telemetry.addData("A5", "Detection" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 0)
+            telemetry.addData("A5", "Case 0" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 1)
+            telemetry.addData("A5", "Case 1" + ((selectedAnswer == 5) ? " [X]" : ""));
+        else if (selectedCase == 4)
+            telemetry.addData("A5", "Case 4" + ((selectedAnswer == 5) ? " [X]" : ""));
+        telemetry.addData("A6", "Deliver second wobble: " + (deliverWobble ? "YES" : "NO") + ((selectedAnswer == 6) ? " [X]" : ""));
+        telemetry.addData("A7", "Start delay: " + startDelay + "s" + ((selectedAnswer == 7) ? " [X]" : ""));
+        telemetry.addData("F", "Press B to modify your answers.\nPress Y to submit your answers.");
+        telemetry.update();
+    }
+
+    private void confirmAnswers() {
+        sleep(500);
+        waitingAnswer = true;
+        pressingSelectionButton = false;
+        boolean firstFramePressing = false;
+        while (waitingAnswer && !isStopRequested()) {
+            if (gamepad1.b || gamepad1.y || gamepad1.dpad_right || gamepad1.dpad_left ||
+                    gamepad1.dpad_up || gamepad1.dpad_down) {
+                if (pressingSelectionButton)
+                    firstFramePressing = false;
+                else {
+                    pressingSelectionButton = true;
+                    firstFramePressing = true;
+                    sleep(200);
+                }
+            } else {
+                pressingSelectionButton = false;
+            }
+            if (pressingSelectionButton && !firstFramePressing)
+                continue;
+            if (gamepad1.b) {
+                waitingAnswer = false;
+                askQuestions();
+            } else if (gamepad1.y) {
+                waitingAnswer = false;
+                telemetry.addData("R", "Ready for start.");
+                telemetry.update();
+            } else if (gamepad1.dpad_down) {
+                selectedAnswer++;
+                if (selectedAnswer == 8)
+                    selectedAnswer = 1;
+                showcaseAnswers();
+            } else if (gamepad1.dpad_up) {
+                selectedAnswer--;
+                if (selectedAnswer == 0)
+                    selectedAnswer = 7;
+                showcaseAnswers();
+            } else if (selectedAnswer != 5 && (gamepad1.dpad_right || gamepad1.dpad_left)) {
+                switch (selectedAnswer) {
+                    case 1:
+                        isRed = !isRed;
+                        break;
+                    case 2:
+                        isFirst = !isFirst;
+                        break;
+                    case 3:
+                        shouldPark = !shouldPark;
+                        break;
+                    case 4:
+                        collectStack = !collectStack;
+                        break;
+                    case 6:
+                        deliverWobble = !deliverWobble;
+                        break;
+                    case 7:
+                        if (gamepad1.dpad_right)
+                            startDelay++;
+                        else
+                            startDelay--;
+                        if (startDelay < 0)
+                            startDelay = 0;
+                        break;
+                }
+                showcaseAnswers();
+            } else if (gamepad1.dpad_right) {
+                switch (selectedCase) {
+                    case -1:
+                        selectedCase = 0;
+                        break;
+                    case 0:
+                        selectedCase = 1;
+                        break;
+                    case 1:
+                        selectedCase = 4;
+                        break;
+                    case 4:
+                        selectedCase = -1;
+                        break;
+                }
+                showcaseAnswers();
+            } else if (gamepad1.dpad_left) {
+                switch (selectedCase) {
+                    case -1:
+                        selectedCase = 4;
+                        break;
+                    case 4:
+                        selectedCase = 1;
+                        break;
+                    case 1:
+                        selectedCase = 0;
+                        break;
+                    case 0:
+                        selectedCase = -1;
+                        break;
+                }
+                showcaseAnswers();
+            }
+        }
+    }
+    /*
+    public void updateDetectionRectangle() {
+        if((isRed && isFirst) || (!isRed && !isFirst)) {
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.x = 505;
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 238;
+        } else{
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.x = 200; //MODIFY
+            pipeline.REGION1_TOPLEFT_ANCHOR_POINT.y = 100; //MODIFY
+        }
+    }
+     */
+
 }
