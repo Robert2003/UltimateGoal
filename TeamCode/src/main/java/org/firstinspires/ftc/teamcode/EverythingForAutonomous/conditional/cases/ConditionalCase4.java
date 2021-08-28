@@ -321,8 +321,8 @@ public class ConditionalCase4 {
                             .lineToLinearHeading(new Pose2d(56.5, 0, -0.14))
                             .build();
                     if (goalDetection.getCollectStack()) {
-                        goNextToRingsTraj = drive.trajectoryBuilder(shootingPositionTraj.end(), true)
-                                .lineToLinearHeading(new Pose2d(56.6, -19, 0.02))
+                        goNextToRingsTraj = drive.trajectoryBuilder(wobbleTraj.end(), true)
+                                .lineToLinearHeading(new Pose2d(56.6, -20, 0.1))
                                 .addTemporalMarker(0.1, () -> {
                                     robot.toggleIntakeServo(true);
                                     robot.dropArm(300);
@@ -331,23 +331,23 @@ public class ConditionalCase4 {
                                 })
                                 .build();
                         firstRingTraj = drive.trajectoryBuilder(goNextToRingsTraj.end(), true)
-                                .lineToLinearHeading(new Pose2d(47, -19, 6.25))
+                                .lineToLinearHeading(new Pose2d(47, -20, 0.05))
                                 .build();
                         secondRingTraj = drive.trajectoryBuilder(firstRingTraj.end(), true)
-                                .lineToLinearHeading(new Pose2d(39, -19, 6.25))
+                                .lineToLinearHeading(new Pose2d(39, -20, 0.05))
                                 .build();
                         thirdRingTraj = drive.trajectoryBuilder(secondRingTraj.end(), true)
-                                .lineToLinearHeading(new Pose2d(34.5, -19, 6.25))
+                                .lineToLinearHeading(new Pose2d(34.5, -20, 0.05))
                                 .addTemporalMarker(0.1, () -> {
                                     robot.toggleFlyWheel(true, 3160);
                                 })
                                 .build();
                         fourthRingTraj = drive.trajectoryBuilder(thirdRingTraj.end(), true)
-                                .lineToLinearHeading(new Pose2d(20, -22, 6.25))
+                                .lineToLinearHeading(new Pose2d(20, -20, 0.05))
                                 .build();
                     }
                     if (goalDetection.getPark() && goalDetection.getCollectStack()) {
-                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
+                        parkTraj = drive.trajectoryBuilder(fourthRingTraj.end())
                                 .lineTo(new Vector2d(68, 0))
                                 .addTemporalMarker(0.1, () -> {
                                     robot.wobbleServo.setPosition(0.45);
@@ -355,7 +355,7 @@ public class ConditionalCase4 {
                                 })
                                 .build();
                     } else if (goalDetection.getPark()) {
-                        parkTraj = drive.trajectoryBuilder(shootingPositionTraj.end())
+                        parkTraj = drive.trajectoryBuilder(wobbleTraj.end())
                                 .lineTo(new Vector2d(68, 0))
                                 .addTemporalMarker(0.1, () -> {
                                     robot.wobbleServo.setPosition(0.45);
