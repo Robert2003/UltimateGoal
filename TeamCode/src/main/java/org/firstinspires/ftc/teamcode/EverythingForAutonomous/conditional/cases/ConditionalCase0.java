@@ -168,7 +168,7 @@ public class ConditionalCase0 {
             robot.dropArm(20);
         } else {
             if (goalDetection.getIsFirst()) {
-                robot.toggleFlyWheel(true, 3200);
+                robot.toggleFlyWheel(true, 3200); //nt3200
                 drive.followTrajectory(shootingPositionTraj);
                 robot.shootrings(3);
                 robot.toggleFlyWheel(false);

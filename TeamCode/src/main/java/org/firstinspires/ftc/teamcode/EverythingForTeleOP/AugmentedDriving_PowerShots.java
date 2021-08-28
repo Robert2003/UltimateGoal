@@ -46,6 +46,7 @@ public class AugmentedDriving_PowerShots extends LinearOpMode {
             Pose2d poseEstimate = drive.getPoseEstimate();
 
             // Print pose to telemetry
+            telemetry.addData("FlyWheel RPM", robot.ticksToRpm(robot.flyWheel.getVelocity()));
             telemetry.addData("mode", currentMode);
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.addData("arm", robot.wobbleArm.getCurrentPosition());

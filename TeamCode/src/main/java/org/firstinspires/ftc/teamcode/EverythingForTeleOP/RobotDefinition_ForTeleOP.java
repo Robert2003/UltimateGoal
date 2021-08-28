@@ -22,8 +22,8 @@ public class RobotDefinition_ForTeleOP {
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_GEAR_RATIO = 1;
 
-    public static int GOAL_RPM = 3250; //era 3200, 3100, 3000, 3200
-    public static int INTERMEDIATE_RPM = 3120; //2940
+    public static int GOAL_RPM = 3250; //era 3200, 3100, 3000, 3200, 3250
+    public static int INTERMEDIATE_RPM = 3150; //2940
     public static int POWERSHOTS_RPM = 3000; // era 2800, 2750
 
 
@@ -137,6 +137,10 @@ public class RobotDefinition_ForTeleOP {
 
     public static double rpmToTicksPerSecond(double rpm) {
         return rpm * MOTOR_TICKS_PER_REV / MOTOR_GEAR_RATIO / 60;
+    }
+
+    public static double ticksToRpm(double ticks) {
+        return ticks / MOTOR_TICKS_PER_REV * MOTOR_GEAR_RATIO * 60;
     }
 
     public void toggleFlyWheel(boolean shouldTurnOn) {
